@@ -96,8 +96,9 @@ export async function validateCSV(
       )
     }
 
-    // Valida caracteres perigosos
-    const dangerousChars = /[<>"|;']/g
+    // Valida caracteres perigosos (exceto ponto e vírgula que é delimitador válido de CSV)
+    // Remove aspas duplas também pois são usadas para escapar campos com vírgulas
+    const dangerousChars = /[<>|]/g
     const dangerousLines: number[] = []
     for (let i = 0; i < lines.length; i++) {
       if (dangerousChars.test(lines[i])) {

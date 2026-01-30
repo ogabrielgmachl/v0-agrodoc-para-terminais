@@ -1,4 +1,4 @@
-import jsPDF from "jspdf"
+import { jsPDF } from "jspdf"
 import autoTable from "jspdf-autotable"
 import type { Truck } from "@/lib/load-trucks"
 
@@ -149,12 +149,18 @@ export function exportQualityAnalysisToPDF(
   doc.setFont("helvetica", "normal")
   doc.text(`Data: ${formatDate(date)}`, 14, 22)
 
-  // Análise de qualidade por parâmetro
-  const avgPol = trucks.filter((t) => t.pol).reduce((sum, t) => sum + (t.pol || 0), 0) / trucks.filter((t) => t.pol).length
-  const avgCor = trucks.filter((t) => t.cor).reduce((sum, t) => sum + (t.cor || 0), 0) / trucks.filter((t) => t.cor).length
-  const avgUmi = trucks.filter((t) => t.umi).reduce((sum, t) => sum + (t.umi || 0), 0) / trucks.filter((t) => t.umi).length
-  const avgCin = trucks.filter((t) => t.cin).reduce((sum, t) => sum + (t.cin || 0), 0) / trucks.filter((t) => t.cin).length
-  const avgRi = trucks.filter((t) => t.ri).reduce((sum, t) => sum + (t.ri || 0), 0) / trucks.filter((t) => t.ri).length
+  // Análise de qualidade por parâmetro - com proteção contra divisão por zero
+  const trucksWithPol = trucks.filter((t) => t.pol)
+  const trucksWithCor = trucks.filter((t) => t.cor)
+  const trucksWithUmi = trucks.filter((t) => t.umi)
+  const trucksWithCin = trucks.filter((t) => t.cin)
+  const trucksWithRi = trucks.filter((t) => t.ri)
+
+  const avgPol = trucksWithPol.length > 0 ? trucksWithPol.reduce((sum, t) => sum + (t.pol || 0), 0) / trucksWithPol.length : 0
+  const avgCor = trucksWithCor.length > 0 ? trucksWithCor.reduce((sum, t) => sum + (t.cor || 0), 0) / trucksWithCor.length : 0
+  const avgUmi = trucksWithUmi.length > 0 ? trucksWithUmi.reduce((sum, t) => sum + (t.umi || 0), 0) / trucksWithUmi.length : 0
+  const avgCin = trucksWithCin.length > 0 ? trucksWithCin.reduce((sum, t) => sum + (t.cin || 0), 0) / trucksWithCin.length : 0
+  const avgRi = trucksWithRi.length > 0 ? trucksWithRi.reduce((sum, t) => sum + (t.ri || 0), 0) / trucksWithRi.length : 0
 
   doc.text("Médias de Qualidade:", 14, 28)
   doc.text(`POL: ${formatNumber(avgPol)} | COR: ${formatNumber(avgCor, 0)} | UMI: ${formatNumber(avgUmi)} | CIN: ${formatNumber(avgCin)} | RI: ${formatNumber(avgRi, 0)}`, 14, 34)
