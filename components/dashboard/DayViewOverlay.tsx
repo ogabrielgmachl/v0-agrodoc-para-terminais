@@ -16,9 +16,11 @@ import {
   Beaker,
   Scan,
   FileText,
+  Download,
   } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { formatCor, formatPol, formatUmi, formatCin, formatRi, formatDecimal, formatDateTimePtBr, formatWeight, updateBoletimToken } from "@/lib/utils"
+import { exportTrucksToPDF, exportQualityAnalysisToPDF } from "@/lib/pdf-export"
 
 interface TruckData {
   id: string
@@ -829,6 +831,42 @@ export function DayViewOverlay({
               {dayTrucks.length} caminhões recepcionados
             </p>
           </div>
+        </div>
+
+        {/* Export buttons */}
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const dateKey = `${selectedDay.getFullYear()}-${String(selectedDay.getMonth() + 1).padStart(2, "0")}-${String(selectedDay.getDate()).padStart(2, "0")}`
+              exportTrucksToPDF(getFilteredTrucks as any, dateKey)
+            }}
+            className={`gap-2 ${
+              isDarkMode
+                ? "border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
+                : "border-slate-300 text-slate-700 hover:bg-slate-50"
+            }`}
+          >
+            <Download className="h-4 w-4" />
+            Exportar PDF
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const dateKey = `${selectedDay.getFullYear()}-${String(selectedDay.getMonth() + 1).padStart(2, "0")}-${String(selectedDay.getDate()).padStart(2, "0")}`
+              exportQualityAnalysisToPDF(getFilteredTrucks as any, dateKey)
+            }}
+            className={`gap-2 ${
+              isDarkMode
+                ? "border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
+                : "border-slate-300 text-slate-700 hover:bg-slate-50"
+            }`}
+          >
+            <Beaker className="h-4 w-4" />
+            Análise Qualidade PDF
+          </Button>
         </div>
       </header>
 
