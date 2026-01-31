@@ -536,102 +536,6 @@ export function DayViewMobileOverlay({
     [dayTrucks, completeTrucks, incompleteTrucks],
   )
 
-  // Calculate daily averages (arithmetic and weighted)
-  const dailyAverages = useMemo(() => {
-    let trucksToAnalyze = completeTrucks
-    
-    if (filterStatus !== "all") {
-      trucksToAnalyze = completeTrucks.filter((t) => t.status === filterStatus)
-    }
-    
-    const trucksWithData = trucksToAnalyze.filter((t) => 
-      t.cor !== null || t.pol !== null || t.umi !== null || t.cin !== null || t.ri !== null
-    )
-    
-    if (trucksWithData.length === 0) {
-      return {
-        cor: { arithmetic: null, weighted: null },
-        pol: { arithmetic: null, weighted: null },
-        umi: { arithmetic: null, weighted: null },
-        cin: { arithmetic: null, weighted: null },
-        ri: { arithmetic: null, weighted: null },
-      }
-    }
-
-    const totals = { cor: 0, pol: 0, umi: 0, cin: 0, ri: 0 }
-    const counts = { cor: 0, pol: 0, umi: 0, cin: 0, ri: 0 }
-    const weightedTotals = { cor: 0, pol: 0, umi: 0, cin: 0, ri: 0 }
-    const totalWeights = { cor: 0, pol: 0, umi: 0, cin: 0, ri: 0 }
-
-    trucksWithData.forEach((truck) => {
-      const weight = truck.grossWeight || 0
-      
-      if (truck.cor !== null) {
-        totals.cor += truck.cor
-        counts.cor++
-        if (weight > 0) {
-          weightedTotals.cor += truck.cor * weight
-          totalWeights.cor += weight
-        }
-      }
-      if (truck.pol !== null) {
-        totals.pol += truck.pol
-        counts.pol++
-        if (weight > 0) {
-          weightedTotals.pol += truck.pol * weight
-          totalWeights.pol += weight
-        }
-      }
-      if (truck.umi !== null) {
-        totals.umi += truck.umi
-        counts.umi++
-        if (weight > 0) {
-          weightedTotals.umi += truck.umi * weight
-          totalWeights.umi += weight
-        }
-      }
-      if (truck.cin !== null) {
-        totals.cin += truck.cin
-        counts.cin++
-        if (weight > 0) {
-          weightedTotals.cin += truck.cin * weight
-          totalWeights.cin += weight
-        }
-      }
-      if (truck.ri !== null) {
-        totals.ri += truck.ri
-        counts.ri++
-        if (weight > 0) {
-          weightedTotals.ri += truck.ri * weight
-          totalWeights.ri += weight
-        }
-      }
-    })
-
-    return {
-      cor: {
-        arithmetic: counts.cor > 0 ? totals.cor / counts.cor : null,
-        weighted: totalWeights.cor > 0 ? weightedTotals.cor / totalWeights.cor : null,
-      },
-      pol: {
-        arithmetic: counts.pol > 0 ? totals.pol / counts.pol : null,
-        weighted: totalWeights.pol > 0 ? weightedTotals.pol / totalWeights.pol : null,
-      },
-      umi: {
-        arithmetic: counts.umi > 0 ? totals.umi / counts.umi : null,
-        weighted: totalWeights.umi > 0 ? weightedTotals.umi / totalWeights.umi : null,
-      },
-      cin: {
-        arithmetic: counts.cin > 0 ? totals.cin / counts.cin : null,
-        weighted: totalWeights.cin > 0 ? weightedTotals.cin / totalWeights.cin : null,
-      },
-      ri: {
-        arithmetic: counts.ri > 0 ? totals.ri / counts.ri : null,
-        weighted: totalWeights.ri > 0 ? weightedTotals.ri / totalWeights.ri : null,
-      },
-    }
-  }, [completeTrucks, filterStatus])
-
   // Filtered trucks
   const filteredTrucks = useMemo(() => {
     let trucks = dayTrucks
@@ -680,11 +584,11 @@ export function DayViewMobileOverlay({
   const isRecentDay = daysDifference <= 3
 
   return (
-    <div className={`fixed inset-0 z-[9997] flex flex-col ${isDarkMode ? "bg-[#0a0f1a]" : "bg-slate-50"}`}>
+    <div className={`fixed inset-0 z-[9997] flex flex-col overflow-hidden ${isDarkMode ? "bg-[#070B14] bg-[radial-gradient(900px_circle_at_20%_0%,rgba(56,189,248,0.14),transparent_60%),radial-gradient(700px_circle_at_80%_10%,rgba(168,85,247,0.10),transparent_55%)]" : "bg-gradient-to-b from-white via-slate-50 to-slate-100 bg-[radial-gradient(700px_circle_at_20%_0%,rgba(56,189,248,0.18),transparent_60%),radial-gradient(700px_circle_at_80%_10%,rgba(99,102,241,0.12),transparent_60%)]"}`}>
       {/* Header */}
       <header
-        className={`shrink-0 flex items-center justify-between px-4 py-3 border-b ${
-          isDarkMode ? "border-slate-800 bg-[#0d1220]" : "border-slate-200 bg-white"
+        className={`shrink-0 sticky top-0 z-30 flex items-center justify-between px-4 py-3 border-b backdrop-blur-xl ${
+          isDarkMode ? "border-slate-800/70 bg-[#0b1020]/80" : "border-slate-200/70 bg-white/80"
         }`}
       >
         <div className="flex items-center gap-2">
@@ -728,7 +632,7 @@ export function DayViewMobileOverlay({
       {/* Search bar (conditionally shown) */}
       {showSearch && (
         <div
-          className={`px-4 py-3 border-b ${isDarkMode ? "border-slate-800 bg-slate-900/50" : "border-slate-200 bg-white"}`}
+          className={`px-4 py-3 border-b backdrop-blur-xl ${isDarkMode ? "border-slate-800/70 bg-white/[0.03]" : "border-slate-200/70 bg-white/70"}`}
         >
           <div className="relative">
             <Search
@@ -740,7 +644,7 @@ export function DayViewMobileOverlay({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               autoFocus
-              className={`w-full pl-10 pr-4 py-2.5 rounded-lg text-sm ${
+              className={`w-full pl-10 pr-4 py-3 rounded-xl text-sm font-medium ${
                 isDarkMode
                   ? "bg-slate-800 text-white placeholder-slate-500 border border-slate-700"
                   : "bg-slate-50 text-slate-900 placeholder-slate-400 border border-slate-200"
@@ -752,7 +656,7 @@ export function DayViewMobileOverlay({
 
       {kpis.awaiting > 0 && (
         <div
-          className={`flex items-start gap-2 p-3 rounded-lg text-xs ${
+          className={`flex items-start gap-2 p-3 rounded-2xl text-xs ${
             isRecentDay
               ? isDarkMode
                 ? "bg-amber-500/10 border border-amber-500/20 text-amber-200"
@@ -808,7 +712,7 @@ export function DayViewMobileOverlay({
       {/* Cards de estatísticas */}
       {!showOnlyIncomplete && (
         <div className="overflow-x-auto scrollbar-hide">
-          <div className="flex gap-3 p-4 min-w-max">
+          <div className="flex gap-3 px-4 py-4 min-w-max">
             {[
               { label: "Total", value: kpis.total, icon: Truck, color: "blue", filter: "all" as const },
               {
@@ -851,9 +755,9 @@ export function DayViewMobileOverlay({
                 <button
                   key={item.filter}
                   onClick={() => setFilterStatus(item.filter)}
-                  className={`flex-shrink-0 w-28 p-3 rounded-xl border transition-all ${
+                  className={`relative overflow-hidden flex-shrink-0 w-28 p-3 rounded-2xl border shadow-sm transition-all duration-200 ${
                     colorClasses[item.color as keyof typeof colorClasses]
-                  } ${isActive ? "ring-2 ring-sky-500 ring-offset-1 " + (isDarkMode ? "ring-offset-slate-900" : "ring-offset-white") : ""}`}
+                  } ${isActive ? "ring-2 ring-sky-500/70 ring-offset-2 " + (isDarkMode ? "ring-offset-[#070B14]" : "ring-offset-white") : ""} hover:-translate-y-0.5 hover:shadow-md`}
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <item.icon className={`w-4 h-4 ${iconColors[item.color as keyof typeof iconColors]}`} />
@@ -870,449 +774,9 @@ export function DayViewMobileOverlay({
         </div>
       )}
 
-      {/* Daily Averages Section - MOBILE */}
-      {!showOnlyIncomplete && (dailyAverages.cor.arithmetic !== null || dailyAverages.pol.arithmetic !== null || dailyAverages.umi.arithmetic !== null || dailyAverages.cin.arithmetic !== null || dailyAverages.ri.arithmetic !== null) && (
-        <div className="px-4 pb-4">
-          <div className={`rounded-xl overflow-hidden ${isDarkMode ? "bg-slate-800/50 border border-slate-700/50" : "bg-white border border-slate-200"}`}>
-            {/* Header */}
-            <div className={`px-4 py-3 border-b ${isDarkMode ? "border-slate-700/50" : "border-slate-200"}`}>
-              <h3 className={`text-sm font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
-                Médias do Dia
-              </h3>
-              <p className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
-                Indicadores de qualidade
-              </p>
-            </div>
-            
-            {/* Cards Grid - 2 colunas no mobile */}
-            <div className="p-3 grid grid-cols-2 gap-3">
-              {/* COR Card */}
-              {dailyAverages.cor.arithmetic !== null && (() => {
-                const isArithOutOfSpec = isOutOfSpec("cor", dailyAverages.cor.arithmetic)
-                const isWeightOutOfSpec = dailyAverages.cor.weighted !== null ? isOutOfSpec("cor", dailyAverages.cor.weighted) : false
-                const hasAnyOutOfSpec = isArithOutOfSpec || isWeightOutOfSpec
-                
-                return (
-                  <div key="cor" className={`relative rounded-lg border overflow-hidden ${
-                    isDarkMode ? "bg-slate-800/40 border-slate-700/40" : "bg-slate-50/80 border-slate-200/80"
-                  }`}>
-                    <div className={`absolute left-0 top-0 bottom-0 w-1 ${
-                      hasAnyOutOfSpec ? "bg-red-500" : "bg-emerald-500"
-                    }`} />
-                    
-                    <div className="p-3 pl-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className={`text-xs font-bold ${isDarkMode ? "text-slate-200" : "text-slate-800"}`}>
-                          COR
-                        </h4>
-                        <div className={`p-1 rounded ${
-                          hasAnyOutOfSpec
-                            ? isDarkMode ? "bg-red-500/20" : "bg-red-100"
-                            : isDarkMode ? "bg-emerald-500/20" : "bg-emerald-100"
-                        }`}>
-                          <svg xmlns="http://www.w3.org/2000/svg" className={`h-2.5 w-2.5 ${
-                            hasAnyOutOfSpec
-                              ? isDarkMode ? "text-red-400" : "text-red-600"
-                              : isDarkMode ? "text-emerald-400" : "text-emerald-600"
-                          }`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            {hasAnyOutOfSpec ? (
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            ) : (
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                            )}
-                          </svg>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-1.5">
-                        <div>
-                          <div className="flex items-center gap-1 mb-0.5">
-                            <div className={`w-1.5 h-1.5 rounded-full ${
-                              isArithOutOfSpec ? "bg-red-500" : "bg-blue-500"
-                            }`} />
-                            <span className={`text-[9px] ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
-                              Arit.
-                            </span>
-                          </div>
-                          <p className={`text-lg font-bold ml-2.5 ${
-                            isArithOutOfSpec ? "text-red-500" : isDarkMode ? "text-blue-400" : "text-blue-600"
-                          }`}>
-                            {formatCor(dailyAverages.cor.arithmetic)}
-                          </p>
-                        </div>
-                        
-                        {dailyAverages.cor.weighted !== null && (
-                          <div>
-                            <div className="flex items-center gap-1 mb-0.5">
-                              <div className={`w-1.5 h-1.5 rounded-full ${
-                                isWeightOutOfSpec ? "bg-red-500" : "bg-emerald-500"
-                              }`} />
-                              <span className={`text-[9px] ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
-                                Pond.
-                              </span>
-                            </div>
-                            <p className={`text-sm font-bold ml-2.5 ${
-                              isWeightOutOfSpec ? "text-red-500" : "text-emerald-500"
-                            }`}>
-                              {formatCor(dailyAverages.cor.weighted)}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                      
-                      <div className={`mt-2 pt-1.5 border-t ${isDarkMode ? "border-slate-700/50" : "border-slate-200/50"}`}>
-                        <p className={`text-[8px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>
-                          Lim: {qualityLimits.cor.max}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })()}
-              
-              {/* POL Card */}
-              {dailyAverages.pol.arithmetic !== null && (() => {
-                const isArithOutOfSpec = isOutOfSpec("pol", dailyAverages.pol.arithmetic)
-                const isWeightOutOfSpec = dailyAverages.pol.weighted !== null ? isOutOfSpec("pol", dailyAverages.pol.weighted) : false
-                const hasAnyOutOfSpec = isArithOutOfSpec || isWeightOutOfSpec
-                
-                return (
-                  <div key="pol" className={`relative rounded-lg border overflow-hidden ${
-                    isDarkMode ? "bg-slate-800/40 border-slate-700/40" : "bg-slate-50/80 border-slate-200/80"
-                  }`}>
-                    <div className={`absolute left-0 top-0 bottom-0 w-1 ${
-                      hasAnyOutOfSpec ? "bg-red-500" : "bg-emerald-500"
-                    }`} />
-                    
-                    <div className="p-3 pl-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className={`text-xs font-bold ${isDarkMode ? "text-slate-200" : "text-slate-800"}`}>
-                          POL
-                        </h4>
-                        <div className={`p-1 rounded ${
-                          hasAnyOutOfSpec
-                            ? isDarkMode ? "bg-red-500/20" : "bg-red-100"
-                            : isDarkMode ? "bg-emerald-500/20" : "bg-emerald-100"
-                        }`}>
-                          <svg xmlns="http://www.w3.org/2000/svg" className={`h-2.5 w-2.5 ${
-                            hasAnyOutOfSpec
-                              ? isDarkMode ? "text-red-400" : "text-red-600"
-                              : isDarkMode ? "text-emerald-400" : "text-emerald-600"
-                          }`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            {hasAnyOutOfSpec ? (
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            ) : (
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                            )}
-                          </svg>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-1.5">
-                        <div>
-                          <div className="flex items-center gap-1 mb-0.5">
-                            <div className={`w-1.5 h-1.5 rounded-full ${
-                              isArithOutOfSpec ? "bg-red-500" : "bg-blue-500"
-                            }`} />
-                            <span className={`text-[9px] ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
-                              Arit.
-                            </span>
-                          </div>
-                          <p className={`text-lg font-bold ml-2.5 ${
-                            isArithOutOfSpec ? "text-red-500" : isDarkMode ? "text-blue-400" : "text-blue-600"
-                          }`}>
-                            {formatPol(dailyAverages.pol.arithmetic)}
-                          </p>
-                        </div>
-                        
-                        {dailyAverages.pol.weighted !== null && (
-                          <div>
-                            <div className="flex items-center gap-1 mb-0.5">
-                              <div className={`w-1.5 h-1.5 rounded-full ${
-                                isWeightOutOfSpec ? "bg-red-500" : "bg-emerald-500"
-                              }`} />
-                              <span className={`text-[9px] ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
-                                Pond.
-                              </span>
-                            </div>
-                            <p className={`text-sm font-bold ml-2.5 ${
-                              isWeightOutOfSpec ? "text-red-500" : "text-emerald-500"
-                            }`}>
-                              {formatPol(dailyAverages.pol.weighted)}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                      
-                      <div className={`mt-2 pt-1.5 border-t ${isDarkMode ? "border-slate-700/50" : "border-slate-200/50"}`}>
-                        <p className={`text-[8px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>
-                          {qualityLimits.pol.min}-{qualityLimits.pol.max}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })()}
-              
-              {/* UMI Card */}
-              {dailyAverages.umi.arithmetic !== null && (() => {
-                const isArithOutOfSpec = isOutOfSpec("um", dailyAverages.umi.arithmetic)
-                const isWeightOutOfSpec = dailyAverages.umi.weighted !== null ? isOutOfSpec("um", dailyAverages.umi.weighted) : false
-                const hasAnyOutOfSpec = isArithOutOfSpec || isWeightOutOfSpec
-                
-                return (
-                  <div key="umi" className={`relative rounded-lg border overflow-hidden ${
-                    isDarkMode ? "bg-slate-800/40 border-slate-700/40" : "bg-slate-50/80 border-slate-200/80"
-                  }`}>
-                    <div className={`absolute left-0 top-0 bottom-0 w-1 ${
-                      hasAnyOutOfSpec ? "bg-red-500" : "bg-emerald-500"
-                    }`} />
-                    
-                    <div className="p-3 pl-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className={`text-xs font-bold ${isDarkMode ? "text-slate-200" : "text-slate-800"}`}>
-                          UMI
-                        </h4>
-                        <div className={`p-1 rounded ${
-                          hasAnyOutOfSpec
-                            ? isDarkMode ? "bg-red-500/20" : "bg-red-100"
-                            : isDarkMode ? "bg-emerald-500/20" : "bg-emerald-100"
-                        }`}>
-                          <svg xmlns="http://www.w3.org/2000/svg" className={`h-2.5 w-2.5 ${
-                            hasAnyOutOfSpec
-                              ? isDarkMode ? "text-red-400" : "text-red-600"
-                              : isDarkMode ? "text-emerald-400" : "text-emerald-600"
-                          }`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            {hasAnyOutOfSpec ? (
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            ) : (
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                            )}
-                          </svg>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-1.5">
-                        <div>
-                          <div className="flex items-center gap-1 mb-0.5">
-                            <div className={`w-1.5 h-1.5 rounded-full ${
-                              isArithOutOfSpec ? "bg-red-500" : "bg-blue-500"
-                            }`} />
-                            <span className={`text-[9px] ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
-                              Arit.
-                            </span>
-                          </div>
-                          <p className={`text-lg font-bold ml-2.5 ${
-                            isArithOutOfSpec ? "text-red-500" : isDarkMode ? "text-blue-400" : "text-blue-600"
-                          }`}>
-                            {formatUmi(dailyAverages.umi.arithmetic)}
-                          </p>
-                        </div>
-                        
-                        {dailyAverages.umi.weighted !== null && (
-                          <div>
-                            <div className="flex items-center gap-1 mb-0.5">
-                              <div className={`w-1.5 h-1.5 rounded-full ${
-                                isWeightOutOfSpec ? "bg-red-500" : "bg-emerald-500"
-                              }`} />
-                              <span className={`text-[9px] ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
-                                Pond.
-                              </span>
-                            </div>
-                            <p className={`text-sm font-bold ml-2.5 ${
-                              isWeightOutOfSpec ? "text-red-500" : "text-emerald-500"
-                            }`}>
-                              {formatUmi(dailyAverages.umi.weighted)}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                      
-                      <div className={`mt-2 pt-1.5 border-t ${isDarkMode ? "border-slate-700/50" : "border-slate-200/50"}`}>
-                        <p className={`text-[8px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>
-                          Lim: {qualityLimits.um.max}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })()}
-              
-              {/* CIN Card */}
-              {dailyAverages.cin.arithmetic !== null && (() => {
-                const isArithOutOfSpec = isOutOfSpec("cin", dailyAverages.cin.arithmetic)
-                const isWeightOutOfSpec = dailyAverages.cin.weighted !== null ? isOutOfSpec("cin", dailyAverages.cin.weighted) : false
-                const hasAnyOutOfSpec = isArithOutOfSpec || isWeightOutOfSpec
-                
-                return (
-                  <div key="cin" className={`relative rounded-lg border overflow-hidden ${
-                    isDarkMode ? "bg-slate-800/40 border-slate-700/40" : "bg-slate-50/80 border-slate-200/80"
-                  }`}>
-                    <div className={`absolute left-0 top-0 bottom-0 w-1 ${
-                      hasAnyOutOfSpec ? "bg-red-500" : "bg-emerald-500"
-                    }`} />
-                    
-                    <div className="p-3 pl-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className={`text-xs font-bold ${isDarkMode ? "text-slate-200" : "text-slate-800"}`}>
-                          CIN
-                        </h4>
-                        <div className={`p-1 rounded ${
-                          hasAnyOutOfSpec
-                            ? isDarkMode ? "bg-red-500/20" : "bg-red-100"
-                            : isDarkMode ? "bg-emerald-500/20" : "bg-emerald-100"
-                        }`}>
-                          <svg xmlns="http://www.w3.org/2000/svg" className={`h-2.5 w-2.5 ${
-                            hasAnyOutOfSpec
-                              ? isDarkMode ? "text-red-400" : "text-red-600"
-                              : isDarkMode ? "text-emerald-400" : "text-emerald-600"
-                          }`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            {hasAnyOutOfSpec ? (
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            ) : (
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                            )}
-                          </svg>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-1.5">
-                        <div>
-                          <div className="flex items-center gap-1 mb-0.5">
-                            <div className={`w-1.5 h-1.5 rounded-full ${
-                              isArithOutOfSpec ? "bg-red-500" : "bg-blue-500"
-                            }`} />
-                            <span className={`text-[9px] ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
-                              Arit.
-                            </span>
-                          </div>
-                          <p className={`text-lg font-bold ml-2.5 ${
-                            isArithOutOfSpec ? "text-red-500" : isDarkMode ? "text-blue-400" : "text-blue-600"
-                          }`}>
-                            {formatCin(dailyAverages.cin.arithmetic)}
-                          </p>
-                        </div>
-                        
-                        {dailyAverages.cin.weighted !== null && (
-                          <div>
-                            <div className="flex items-center gap-1 mb-0.5">
-                              <div className={`w-1.5 h-1.5 rounded-full ${
-                                isWeightOutOfSpec ? "bg-red-500" : "bg-emerald-500"
-                              }`} />
-                              <span className={`text-[9px] ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
-                                Pond.
-                              </span>
-                            </div>
-                            <p className={`text-sm font-bold ml-2.5 ${
-                              isWeightOutOfSpec ? "text-red-500" : "text-emerald-500"
-                            }`}>
-                              {formatCin(dailyAverages.cin.weighted)}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                      
-                      <div className={`mt-2 pt-1.5 border-t ${isDarkMode ? "border-slate-700/50" : "border-slate-200/50"}`}>
-                        <p className={`text-[8px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>
-                          Lim: {qualityLimits.cin.max}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })()}
-              
-              {/* RI Card */}
-              {dailyAverages.ri.arithmetic !== null && (() => {
-                const isArithOutOfSpec = isOutOfSpec("ri", dailyAverages.ri.arithmetic)
-                const isWeightOutOfSpec = dailyAverages.ri.weighted !== null ? isOutOfSpec("ri", dailyAverages.ri.weighted) : false
-                const hasAnyOutOfSpec = isArithOutOfSpec || isWeightOutOfSpec
-                
-                return (
-                  <div key="ri" className={`relative rounded-lg border overflow-hidden ${
-                    isDarkMode ? "bg-slate-800/40 border-slate-700/40" : "bg-slate-50/80 border-slate-200/80"
-                  }`}>
-                    <div className={`absolute left-0 top-0 bottom-0 w-1 ${
-                      hasAnyOutOfSpec ? "bg-red-500" : "bg-emerald-500"
-                    }`} />
-                    
-                    <div className="p-3 pl-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className={`text-xs font-bold ${isDarkMode ? "text-slate-200" : "text-slate-800"}`}>
-                          RI
-                        </h4>
-                        <div className={`p-1 rounded ${
-                          hasAnyOutOfSpec
-                            ? isDarkMode ? "bg-red-500/20" : "bg-red-100"
-                            : isDarkMode ? "bg-emerald-500/20" : "bg-emerald-100"
-                        }`}>
-                          <svg xmlns="http://www.w3.org/2000/svg" className={`h-2.5 w-2.5 ${
-                            hasAnyOutOfSpec
-                              ? isDarkMode ? "text-red-400" : "text-red-600"
-                              : isDarkMode ? "text-emerald-400" : "text-emerald-600"
-                          }`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            {hasAnyOutOfSpec ? (
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            ) : (
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                            )}
-                          </svg>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-1.5">
-                        <div>
-                          <div className="flex items-center gap-1 mb-0.5">
-                            <div className={`w-1.5 h-1.5 rounded-full ${
-                              isArithOutOfSpec ? "bg-red-500" : "bg-blue-500"
-                            }`} />
-                            <span className={`text-[9px] ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
-                              Arit.
-                            </span>
-                          </div>
-                          <p className={`text-lg font-bold ml-2.5 ${
-                            isArithOutOfSpec ? "text-red-500" : isDarkMode ? "text-blue-400" : "text-blue-600"
-                          }`}>
-                            {formatRi(dailyAverages.ri.arithmetic)}
-                          </p>
-                        </div>
-                        
-                        {dailyAverages.ri.weighted !== null && (
-                          <div>
-                            <div className="flex items-center gap-1 mb-0.5">
-                              <div className={`w-1.5 h-1.5 rounded-full ${
-                                isWeightOutOfSpec ? "bg-red-500" : "bg-emerald-500"
-                              }`} />
-                              <span className={`text-[9px] ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
-                                Pond.
-                              </span>
-                            </div>
-                            <p className={`text-sm font-bold ml-2.5 ${
-                              isWeightOutOfSpec ? "text-red-500" : "text-emerald-500"
-                            }`}>
-                              {formatRi(dailyAverages.ri.weighted)}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                      
-                      <div className={`mt-2 pt-1.5 border-t ${isDarkMode ? "border-slate-700/50" : "border-slate-200/50"}`}>
-                        <p className={`text-[8px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>
-                          Lim: {qualityLimits.ri.max}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })()}
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Lista de caminhoes */}
-      <div className="flex-1 overflow-auto px-4 pb-4">
-        <div className="space-y-2">
+      <div className="flex-1 overflow-auto px-4 pb-6 pt-4">
+        <div className="mx-auto max-w-xl space-y-3">
           {filteredTrucks.length === 0 ? (
             <div className={`text-center py-12 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
               {showOnlyIncomplete ? "Todos os caminhões já possuem análises." : "Nenhum caminhão encontrado"}
@@ -1352,14 +816,14 @@ export function DayViewMobileOverlay({
               return (
                 <div
                   key={truck.id}
-                  className={`rounded-xl overflow-hidden ${
-                    isDarkMode ? "bg-slate-800/50 border border-slate-700/50" : "bg-white border border-slate-200"
+                  className={`rounded-2xl overflow-hidden shadow-sm ${
+                    isDarkMode ? "bg-white/[0.04] border border-slate-800/70" : "bg-white/80 border border-slate-200/70"
                   }`}
                 >
                   <button
                     onClick={() => toggleTruckExpand(truck.id)}
-                    className={`w-full p-3 flex items-center justify-between ${
-                      isDarkMode ? "hover:bg-slate-700/50" : "hover:bg-slate-50"
+                    className={`w-full px-4 py-3.5 flex items-center justify-between transition-colors ${
+                      isDarkMode ? "hover:bg-white/[0.04]" : "hover:bg-slate-50"
                     }`}
                   >
                     <div className="flex items-center gap-3">
