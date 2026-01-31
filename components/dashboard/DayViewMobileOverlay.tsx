@@ -584,11 +584,11 @@ export function DayViewMobileOverlay({
   const isRecentDay = daysDifference <= 3
 
   return (
-    <div className={`fixed inset-0 z-[9997] flex flex-col overflow-hidden ${isDarkMode ? "bg-[#070B14] bg-[radial-gradient(900px_circle_at_20%_0%,rgba(56,189,248,0.14),transparent_60%),radial-gradient(700px_circle_at_80%_10%,rgba(168,85,247,0.10),transparent_55%)]" : "bg-gradient-to-b from-white via-slate-50 to-slate-100 bg-[radial-gradient(700px_circle_at_20%_0%,rgba(56,189,248,0.18),transparent_60%),radial-gradient(700px_circle_at_80%_10%,rgba(99,102,241,0.12),transparent_60%)]"}`}>
+    <div className={`fixed inset-0 z-[9997] flex flex-col ${isDarkMode ? "bg-[#0a0f1a]" : "bg-slate-50"}`}>
       {/* Header */}
       <header
-        className={`shrink-0 sticky top-0 z-30 flex items-center justify-between px-4 py-3 border-b backdrop-blur-xl ${
-          isDarkMode ? "border-slate-800/70 bg-[#0b1020]/80" : "border-slate-200/70 bg-white/80"
+        className={`shrink-0 flex items-center justify-between px-4 py-3 border-b ${
+          isDarkMode ? "border-slate-800 bg-[#0d1220]" : "border-slate-200 bg-white"
         }`}
       >
         <div className="flex items-center gap-2">
@@ -632,7 +632,7 @@ export function DayViewMobileOverlay({
       {/* Search bar (conditionally shown) */}
       {showSearch && (
         <div
-          className={`px-4 py-3 border-b backdrop-blur-xl ${isDarkMode ? "border-slate-800/70 bg-white/[0.03]" : "border-slate-200/70 bg-white/70"}`}
+          className={`px-4 py-3 border-b ${isDarkMode ? "border-slate-800 bg-slate-900/50" : "border-slate-200 bg-white"}`}
         >
           <div className="relative">
             <Search
@@ -644,7 +644,7 @@ export function DayViewMobileOverlay({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               autoFocus
-              className={`w-full pl-10 pr-4 py-3 rounded-xl text-sm font-medium ${
+              className={`w-full pl-10 pr-4 py-2.5 rounded-lg text-sm ${
                 isDarkMode
                   ? "bg-slate-800 text-white placeholder-slate-500 border border-slate-700"
                   : "bg-slate-50 text-slate-900 placeholder-slate-400 border border-slate-200"
@@ -656,7 +656,7 @@ export function DayViewMobileOverlay({
 
       {kpis.awaiting > 0 && (
         <div
-          className={`flex items-start gap-2 p-3 rounded-2xl text-xs ${
+          className={`flex items-start gap-2 p-3 rounded-lg text-xs ${
             isRecentDay
               ? isDarkMode
                 ? "bg-amber-500/10 border border-amber-500/20 text-amber-200"
@@ -712,7 +712,7 @@ export function DayViewMobileOverlay({
       {/* Cards de estatísticas */}
       {!showOnlyIncomplete && (
         <div className="overflow-x-auto scrollbar-hide">
-          <div className="flex gap-3 px-4 py-4 min-w-max">
+          <div className="flex gap-3 p-4 min-w-max">
             {[
               { label: "Total", value: kpis.total, icon: Truck, color: "blue", filter: "all" as const },
               {
@@ -755,9 +755,9 @@ export function DayViewMobileOverlay({
                 <button
                   key={item.filter}
                   onClick={() => setFilterStatus(item.filter)}
-                  className={`relative overflow-hidden flex-shrink-0 w-28 p-3 rounded-2xl border shadow-sm transition-all duration-200 ${
+                  className={`flex-shrink-0 w-28 p-3 rounded-xl border transition-all ${
                     colorClasses[item.color as keyof typeof colorClasses]
-                  } ${isActive ? "ring-2 ring-sky-500/70 ring-offset-2 " + (isDarkMode ? "ring-offset-[#070B14]" : "ring-offset-white") : ""} hover:-translate-y-0.5 hover:shadow-md`}
+                  } ${isActive ? "ring-2 ring-sky-500 ring-offset-1 " + (isDarkMode ? "ring-offset-slate-900" : "ring-offset-white") : ""}`}
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <item.icon className={`w-4 h-4 ${iconColors[item.color as keyof typeof iconColors]}`} />
@@ -775,8 +775,8 @@ export function DayViewMobileOverlay({
       )}
 
       {/* Lista de caminhoes */}
-      <div className="flex-1 overflow-auto px-4 pb-6 pt-4">
-        <div className="mx-auto max-w-xl space-y-3">
+      <div className="flex-1 overflow-auto px-4 pb-4">
+        <div className="space-y-2">
           {filteredTrucks.length === 0 ? (
             <div className={`text-center py-12 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
               {showOnlyIncomplete ? "Todos os caminhões já possuem análises." : "Nenhum caminhão encontrado"}
@@ -816,14 +816,14 @@ export function DayViewMobileOverlay({
               return (
                 <div
                   key={truck.id}
-                  className={`rounded-2xl overflow-hidden shadow-sm ${
-                    isDarkMode ? "bg-white/[0.04] border border-slate-800/70" : "bg-white/80 border border-slate-200/70"
+                  className={`rounded-xl overflow-hidden ${
+                    isDarkMode ? "bg-slate-800/50 border border-slate-700/50" : "bg-white border border-slate-200"
                   }`}
                 >
                   <button
                     onClick={() => toggleTruckExpand(truck.id)}
-                    className={`w-full px-4 py-3.5 flex items-center justify-between transition-colors ${
-                      isDarkMode ? "hover:bg-white/[0.04]" : "hover:bg-slate-50"
+                    className={`w-full p-3 flex items-center justify-between ${
+                      isDarkMode ? "hover:bg-slate-700/50" : "hover:bg-slate-50"
                     }`}
                   >
                     <div className="flex items-center gap-3">
