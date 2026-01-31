@@ -766,11 +766,11 @@ export function DayViewOverlay({
   }
 
   return (
-    <div className={`fixed inset-0 z-[100] flex flex-col overflow-hidden ${isDarkMode ? "bg-[#070B14] bg-[radial-gradient(1200px_circle_at_20%_0%,rgba(56,189,248,0.14),transparent_55%),radial-gradient(900px_circle_at_80%_10%,rgba(168,85,247,0.10),transparent_50%)]" : "bg-gradient-to-b from-white via-slate-50 to-slate-100 bg-[radial-gradient(900px_circle_at_20%_0%,rgba(56,189,248,0.18),transparent_55%),radial-gradient(900px_circle_at_80%_10%,rgba(99,102,241,0.12),transparent_55%)]"}`}>
+    <div className={`fixed inset-0 z-[100] flex flex-col ${isDarkMode ? "bg-[#0a0f1a]" : "bg-slate-50"}`}>
       {/* Header - mantido conforme solicitado */}
       <header
-        className={`shrink-0 sticky top-0 z-30 flex items-center justify-between px-6 py-4 border-b backdrop-blur-xl ${
-          isDarkMode ? "bg-[#0b1020]/80 border-slate-800/60" : "bg-white/80 border-slate-200/70"
+        className={`shrink-0 flex items-center justify-between px-6 py-4 border-b ${
+          isDarkMode ? "bg-[#0d1220] border-slate-700/50" : "bg-white border-slate-200"
         }`}
       >
         <div className="flex items-center gap-4">
@@ -830,30 +830,14 @@ export function DayViewOverlay({
             </p>
           </div>
         </div>
-
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className={`p-2 ${
-              isDarkMode
-                ? "text-slate-400 hover:text-white hover:bg-slate-800/80"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-            }`}
-            title="Fechar"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
       </header>
 
       {/* Conteudo principal com scroll da pagina */}
       <div className="flex-1 overflow-auto">
-        <div className="mx-auto w-full max-w-[1400px] px-6 py-6 space-y-5">
+        <div className="px-6 py-4 space-y-4">
           {kpis.awaiting > 0 && (
             <div
-              className={`flex items-start gap-3 p-4 rounded-2xl border ${
+              className={`flex items-start gap-3 p-4 rounded-lg ${
                 isRecentDay
                   ? isDarkMode
                     ? "bg-amber-500/10 border border-amber-500/20 text-amber-200"
@@ -919,7 +903,7 @@ export function DayViewOverlay({
 
           {/* Cards de metricas - 100% largura em linha */}
           {!showOnlyIncomplete && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-4 gap-4">
               {cardConfigs.map((card) => (
                 <button
                   key={card.label}
@@ -927,14 +911,13 @@ export function DayViewOverlay({
                     setFilterStatus(card.filter)
                     setCurrentPage(1)
                   }}
-                  className={`group relative overflow-hidden rounded-2xl border ${card.bgColor} ${card.borderColor} p-4 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${
+                  className={`relative rounded-xl border ${card.bgColor} ${card.borderColor} p-4 text-left transition-all hover:shadow-md ${
                     filterStatus === card.filter
-                      ? "ring-2 ring-offset-2 " +
-                        (isDarkMode ? "ring-sky-400/70 ring-offset-[#070B14]" : "ring-sky-500/70 ring-offset-white")
+                      ? "ring-2 ring-offset-1 " +
+                        (isDarkMode ? "ring-sky-500 ring-offset-slate-900" : "ring-sky-500 ring-offset-white")
                       : ""
                   }`}
                 >
-                  <div className={`absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity ${isDarkMode ? "bg-[radial-gradient(600px_circle_at_20%_10%,rgba(56,189,248,0.14),transparent_55%)]" : "bg-[radial-gradient(600px_circle_at_20%_10%,rgba(56,189,248,0.18),transparent_55%)]"}`} />
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
                       <p className={`text-xs font-semibold uppercase tracking-wide mb-2 ${card.labelColor}`}>
@@ -959,10 +942,10 @@ export function DayViewOverlay({
           {/* Barra de acoes - busca e filtros - Design Moderno */}
           {!showOnlyIncomplete && (
             <div
-              className={`flex items-center gap-4 p-4 rounded-2xl shadow-sm backdrop-blur-md ${
+              className={`flex items-center gap-4 p-5 rounded-2xl shadow-sm ${
                 isDarkMode 
-                  ? "bg-white/[0.04] border border-slate-800/60" 
-                  : "bg-white/70 border border-slate-200/70"
+                  ? "bg-gradient-to-r from-slate-800/80 to-slate-800/60 border border-slate-700/50 backdrop-blur-sm" 
+                  : "bg-gradient-to-r from-white to-slate-50/80 border border-slate-200/80 backdrop-blur-sm"
               }`}
             >
               <div className="flex-1 relative group">
@@ -1000,7 +983,7 @@ export function DayViewOverlay({
                 )}
               </div>
 
-              <div className={`h-9 w-px ${isDarkMode ? "bg-slate-800" : "bg-slate-200"}`} />
+              <div className={`h-8 w-px ${isDarkMode ? "bg-slate-700" : "bg-slate-200"}`} />
 
               <button
                 onClick={() => {
@@ -1022,7 +1005,7 @@ export function DayViewOverlay({
 
           {/* Tabela principal - Design Moderno */}
           <div
-            className={`rounded-2xl overflow-hidden shadow-md ${
+            className={`rounded-2xl overflow-hidden shadow-sm ${
               isDarkMode 
                 ? "bg-gradient-to-b from-slate-800/50 to-slate-800/30 border border-slate-700/50" 
                 : "bg-white border border-slate-200/80"
@@ -1031,7 +1014,7 @@ export function DayViewOverlay({
             {tableViewMode === "main" ? (
               <>
                 <table className="w-full">
-                  <thead className={`sticky top-0 z-10 ${isDarkMode ? "bg-[#0b1020]/90 backdrop-blur-xl" : "bg-white/85 backdrop-blur-xl"} `}>
+                  <thead className={`sticky top-0 z-10 ${isDarkMode ? "bg-slate-800/95 backdrop-blur-sm" : "bg-gradient-to-r from-slate-50 to-slate-100/80"}`}>
                     <tr className={isDarkMode ? "border-b border-slate-700/80" : "border-b border-slate-200"}>
                       <th
                         className={`px-5 py-4 text-left text-[11px] font-bold uppercase tracking-wider ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}
@@ -1096,7 +1079,7 @@ export function DayViewOverlay({
                       </th>
                     </tr>
                   </thead>
-                  <tbody className={isDarkMode ? "divide-y divide-slate-800/60" : "divide-y divide-slate-100"}>
+                  <tbody className={isDarkMode ? "divide-y divide-slate-700/30" : "divide-y divide-slate-100"}>
                     {paginatedTrucks.length === 0 ? (
                       <tr>
                         <td
@@ -1148,8 +1131,8 @@ export function DayViewOverlay({
                             key={truck.id}
                             className={`transition-all duration-200 ${
                               isDarkMode 
-                                ? "hover:bg-white/[0.04]" 
-                                : "hover:bg-slate-50"
+                                ? "hover:bg-slate-700/40" 
+                                : "hover:bg-sky-50/50"
                             }`}
                           >
                             <td className="px-5 py-3.5">
@@ -1425,8 +1408,8 @@ export function DayViewOverlay({
                   <div
                     className={`flex items-center justify-between gap-4 px-5 py-4 border-t ${
                       isDarkMode 
-                        ? "border-slate-800/60 bg-white/[0.03]" 
-                        : "border-slate-200/70 bg-white/70"
+                        ? "border-slate-700/50 bg-gradient-to-r from-slate-800/60 to-slate-800/40" 
+                        : "border-slate-200 bg-gradient-to-r from-slate-50 to-white"
                     }`}
                   >
                     <div className={`text-sm ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
@@ -1494,7 +1477,7 @@ export function DayViewOverlay({
               </>
             ) : (
               /* Visualizacao por Cliente */
-              <div className="p-5 space-y-4">
+              <div className="p-4 space-y-3">
                 {(() => {
                   const groupedByClient = getFilteredTrucks.reduce(
                     (acc, truck) => {
@@ -1872,7 +1855,7 @@ export function DayViewOverlay({
 
           {/* Daily Averages Section - Bar Charts - Design Moderno */}
           {!showOnlyIncomplete && (dailyAverages.cor.arithmetic !== null || dailyAverages.pol.arithmetic !== null || dailyAverages.umi.arithmetic !== null || dailyAverages.cin.arithmetic !== null || dailyAverages.ri.arithmetic !== null) && (
-            <div className={`rounded-2xl overflow-hidden shadow-md ${isDarkMode ? "bg-gradient-to-b from-slate-800/60 to-slate-800/40 border border-slate-700/60" : "bg-gradient-to-b from-white to-slate-50/50 border border-slate-200/80"}`}>
+            <div className={`rounded-2xl overflow-hidden shadow-sm ${isDarkMode ? "bg-gradient-to-b from-slate-800/60 to-slate-800/40 border border-slate-700/60" : "bg-gradient-to-b from-white to-slate-50/50 border border-slate-200/80"}`}>
               <div className={`px-6 py-5 border-b ${isDarkMode ? 'border-slate-700/60 bg-slate-800/40' : 'border-slate-200/80 bg-gradient-to-r from-slate-50/80 to-white'}`}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -2243,8 +2226,8 @@ export function DayViewOverlay({
 
           {/* Popup */}
           <div
-            className={`fixed z-[120] w-[390px] max-h-[80vh] overflow-y-auto rounded-2xl shadow-2xl border backdrop-blur-xl ${
-              isDarkMode ? "bg-[#0b1020]/95 border-slate-800/70" : "bg-white/95 border-slate-200/70"
+            className={`fixed z-[120] w-[380px] max-h-[80vh] overflow-y-auto rounded-xl shadow-2xl border ${
+              isDarkMode ? "bg-slate-900 border-slate-700" : "bg-white border-slate-200"
             }`}
             style={{
               left: (() => {
