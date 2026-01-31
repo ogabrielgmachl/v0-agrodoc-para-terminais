@@ -119,7 +119,6 @@ interface DashboardMobileProps {
   formatCin: (value: number) => string
   formatPol: (value: number) => string
   formatCor: (value: number) => string
-  formatToneladas: (value: number) => string
   username: string
   handleLogout: () => void
   onTabChange: (tab: string) => void
@@ -222,7 +221,6 @@ export function DashboardMobile({
   formatCin,
   formatPol,
   formatCor,
-  formatToneladas,
   username,
   handleLogout,
   shipsByDate = {},
