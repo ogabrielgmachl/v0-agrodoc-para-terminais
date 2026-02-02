@@ -1071,260 +1071,256 @@ export function DashboardDesktop({
 
         <main className="relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden">
           {currentModule === "recepcao" ? (
-            <div className="flex-1 overflow-hidden p-2 sm:p-4 lg:p-6">
-              <div
-                className={`relative z-0 h-full overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-xl backdrop-blur-xl ${isDarkMode ? "border border-white/10 bg-[#020617]/80" : "border border-gray-200 bg-white"}`}
-              >
-                <div className="grid h-full grid-cols-7 grid-rows-[auto_repeat(6,1fr)] overflow-y-auto calendar-scroll">
+            <div className="flex-1 overflow-auto calendar-scroll">
+              <div className="grid h-full grid-cols-7 auto-rows-fr min-h-0">
                   {weekDays.map((day) => (
                     <div
                       key={day}
-                      className={`sticky top-0 z-10 flex items-center justify-center p-1.5 sm:p-2 text-[10px] sm:text-xs font-medium ${isDarkMode ? "border border-gray-600/20 bg-gray-700/5" : "border-gray-200 bg-white text-gray-600"}`}
+                      className={`sticky top-0 z-10 flex items-center justify-center p-3 sm:p-4 text-xs sm:text-sm font-semibold border-b border-r ${isDarkMode ? "bg-slate-900/95 text-gray-300 border-white/10" : "bg-white text-gray-700 border-gray-200"}`}
                     >
                       <span className="hidden sm:inline">{day}</span>
                       <span className="inline sm:hidden">{day.substring(0, 1)}</span>
                     </div>
                   ))}
 
-                  {calendarDays.map((dayData, idx) => {
-                    const truckCount = getTruckData(dayData.date)
-                    const qualityStatus = getQualityStatus(dayData.date)
-                    const showGrayCard = truckCount === undefined || truckCount === 0
+                {calendarDays.map((dayData, idx) => {
+                  const truckCount = getTruckData(dayData.date)
+                  const qualityStatus = getQualityStatus(dayData.date)
+                  const showGrayCard = truckCount === undefined || truckCount === 0
 
-                    const isCurrentMonth = dayData.month === "current"
+                  const isCurrentMonth = dayData.month === "current"
 
-                    // Check if date is in the past
-                    const today = new Date()
-                    today.setHours(0, 0, 0, 0)
-                    const clickedDate = new Date(dayData.date)
-                    clickedDate.setHours(0, 0, 0, 0)
-                    const isPastDate = clickedDate < today
+                  // Check if date is in the past
+                  const today = new Date()
+                  today.setHours(0, 0, 0, 0)
+                  const clickedDate = new Date(dayData.date)
+                  clickedDate.setHours(0, 0, 0, 0)
+                  const isPastDate = clickedDate < today
 
-                    const cardColorClasses = !isCurrentMonth
-                      ? isDarkMode
-                        ? "border border-gray-600/10 bg-gray-700/5"
-                        : "bg-gray-100/50 border border-gray-200/50"
-                      : showGrayCard
-                        ? isPastDate
-                          ? isDarkMode
-                            ? "border border-slate-600/40 bg-slate-800/40"
-                            : "bg-slate-200 border border-slate-300"
-                          : isDarkMode
-                            ? "border border-white/5 bg-white/5"
-                            : "bg-gray-200"
-                        : qualityStatus === "incomplete"
-                          ? isDarkMode
-                            ? "bg-rose-500/18 border border-rose-500/25"
-                            : "bg-rose-100 border border-rose-300"
-                          : isDarkMode
-                            ? "border border-emerald-500/25 bg-emerald-500/15"
-                            : "bg-emerald-100 border border-emerald-300"
+                  const cardColorClasses = !isCurrentMonth
+                    ? isDarkMode
+                      ? "border border-gray-600/10 bg-gray-700/5"
+                      : "bg-gray-100/50 border border-gray-200/50"
+                    : showGrayCard
+                      ? isPastDate
+                        ? isDarkMode
+                          ? "border border-slate-600/40 bg-slate-800/40"
+                          : "bg-slate-200 border border-slate-300"
+                        : isDarkMode
+                          ? "border border-white/5 bg-white/5"
+                          : "bg-gray-200"
+                      : qualityStatus === "incomplete"
+                        ? isDarkMode
+                          ? "bg-rose-500/18 border border-rose-500/25"
+                          : "bg-rose-100 border border-rose-300"
+                        : isDarkMode
+                          ? "border border-emerald-500/25 bg-emerald-500/15"
+                          : "bg-emerald-100 border border-emerald-300"
 
-                    const iconColorClasses = !isCurrentMonth
-                      ? "text-gray-400"
-                      : showGrayCard
-                        ? isPastDate
-                          ? isDarkMode
-                            ? "text-slate-400"
-                            : "text-slate-500"
-                          : isDarkMode
-                            ? "text-gray-500"
-                            : "text-gray-400"
-                        : qualityStatus === "incomplete"
-                          ? isDarkMode
-                            ? "text-rose-300"
-                            : "text-rose-600"
-                          : isDarkMode
-                            ? "text-emerald-300"
-                            : "text-emerald-600"
+                  const iconColorClasses = !isCurrentMonth
+                    ? "text-gray-400"
+                    : showGrayCard
+                      ? isPastDate
+                        ? isDarkMode
+                          ? "text-slate-400"
+                          : "text-slate-500"
+                        : isDarkMode
+                          ? "text-gray-500"
+                          : "text-gray-400"
+                      : qualityStatus === "incomplete"
+                        ? isDarkMode
+                          ? "text-rose-300"
+                          : "text-rose-600"
+                        : isDarkMode
+                          ? "text-emerald-300"
+                          : "text-emerald-600"
 
-                    const textColorClasses = !isCurrentMonth
-                      ? "text-gray-400"
-                      : showGrayCard
-                        ? isPastDate
-                          ? isDarkMode
-                            ? "text-slate-300"
-                            : "text-slate-700"
-                          : isDarkMode
-                            ? "text-gray-500"
-                            : "text-gray-500"
-                        : qualityStatus === "incomplete"
-                          ? isDarkMode
-                            ? "text-rose-300"
-                            : "text-rose-700"
-                          : isDarkMode
-                            ? "text-emerald-300"
-                            : "text-emerald-700"
+                  const textColorClasses = !isCurrentMonth
+                    ? "text-gray-400"
+                    : showGrayCard
+                      ? isPastDate
+                        ? isDarkMode
+                          ? "text-slate-300"
+                          : "text-slate-700"
+                        : isDarkMode
+                          ? "text-gray-500"
+                          : "text-gray-500"
+                      : qualityStatus === "incomplete"
+                        ? isDarkMode
+                          ? "text-rose-300"
+                          : "text-rose-700"
+                        : isDarkMode
+                          ? "text-emerald-300"
+                          : "text-emerald-700"
 
-                    return (
+                  return (
                       <div
                         key={idx}
-                        className={`group relative flex flex-col border-b border-r p-2 sm:p-3 min-h-[90px] sm:min-h-[110px] transition-all ${
-                          dayData.month !== "current"
-                            ? isDarkMode
-                              ? "bg-white/[0.02]"
-                              : "bg-gray-50"
-                            : isDarkMode
-                              ? "bg-transparent hover:bg-white/[0.02]"
-                              : "bg-white hover:bg-gray-50/80"
-                        } ${isDarkMode ? "border-white/5" : "border-gray-200"} ${
-                          isCurrentMonth && truckCount > 0 ? "cursor-pointer" : ""
-                        }`}
-                        onClick={() => isCurrentMonth && truckCount > 0 && handleDayClick(dayData.date, truckCount)}
-                      >
-                        {/* Número do dia - posição superior esquerda */}
-                        <div className="mb-2">
-                          <span
-                            className={`inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full text-[10px] sm:text-xs font-semibold transition-colors ${
-                              !isCurrentMonth || showGrayCard
-                                ? "text-gray-400"
-                                : isDarkMode
-                                  ? "text-gray-100"
-                                  : "text-gray-900"
-                            }`}
-                          >
-                            {dayData.day}
-                          </span>
-                        </div>
-
-                        {/* Badge de caminhões - estilo pill */}
-                        {isCurrentMonth && truckCount > 0 && (
-                          <div className="flex-1 flex items-start">
-                            <div className={`relative inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full transition-all duration-200 group-hover:scale-105 group-hover:shadow-md ${
-                              qualityStatus === "incomplete"
-                                ? isDarkMode 
-                                  ? "bg-rose-500/15 border border-rose-500/30" 
-                                  : "bg-rose-100 border border-rose-300"
-                                : isDarkMode
-                                  ? "bg-emerald-500/15 border border-emerald-500/30"
-                                  : "bg-emerald-100 border border-emerald-300"
-                            }`}>
-                              {/* Indicador de status - borda lateral transformada em dot */}
-                              <div
-                                className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${
-                                  (() => {
-                                    const qualityIndicator = getDayQualityIndicator(dayData.date)
-                                    if (qualityIndicator === "rejected") return "bg-red-500"
-                                    if (qualityIndicator === "apurado") return "bg-amber-500"
-                                    return qualityStatus === "incomplete" 
-                                      ? isDarkMode ? "bg-rose-400" : "bg-rose-500"
-                                      : isDarkMode ? "bg-emerald-400" : "bg-emerald-500"
-                                  })()
-                                }`}
-                              />
-                              <TruckIcon className={`h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0 ${iconColorClasses}`} />
-                              <span className={`text-[10px] sm:text-xs font-bold ${textColorClasses}`}>
-                                {truckCount.toLocaleString("pt-BR")}
-                              </span>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Hover Preview Melhorado - Estilo Card */}
-                        {isCurrentMonth && truckCount > 0 && (
-                          <div className={`absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 rounded-lg z-10 ${
-                            isDarkMode 
-                              ? "bg-slate-900/95 backdrop-blur-sm" 
-                              : "bg-white/98 backdrop-blur-sm shadow-xl"
-                          }`}>
-                            <div className="p-3 w-full">
-                              {/* Header do preview */}
-                              <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-200/20">
-                                <Calendar className={`h-3.5 w-3.5 ${isDarkMode ? "text-blue-400" : "text-blue-600"}`} />
-                                <p className={`text-[11px] font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>
-                                  {truckCount} caminhõe{truckCount > 1 ? "s" : ""}
-                                </p>
-                              </div>
-                              
-                              {/* Status breakdown com ícones */}
-                              {(() => {
-                                const dateStr = `${dayData.date.getFullYear()}-${String(dayData.date.getMonth() + 1).padStart(2, "0")}-${String(dayData.date.getDate()).padStart(2, "0")}`
-                                const trucks = trucksByDate[dateStr] || []
-                                const approved = trucks.filter(t => t.status === "approved").length
-                                const apurado = trucks.filter(t => t.status === "apurado").length
-                                const rejected = trucks.filter(t => t.status === "rejected").length
-                                
-                                return (
-                                  <div className="space-y-1.5">
-                                    {approved > 0 && (
-                                      <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-1.5">
-                                          <CheckCircle2 className="h-3 w-3 text-emerald-500" />
-                                          <span className={`text-[10px] font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
-                                            Aprovados
-                                          </span>
-                                        </div>
-                                        <span className="text-[10px] font-bold text-emerald-500">
-                                          {approved}
-                                        </span>
-                                      </div>
-                                    )}
-                                    {apurado > 0 && (
-                                      <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-1.5">
-                                          <AlertTriangle className="h-3 w-3 text-amber-500" />
-                                          <span className={`text-[10px] font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
-                                            Apontados
-                                          </span>
-                                        </div>
-                                        <span className="text-[10px] font-bold text-amber-500">
-                                          {apurado}
-                                        </span>
-                                      </div>
-                                    )}
-                                    {rejected > 0 && (
-                                      <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-1.5">
-                                          <XCircle className="h-3 w-3 text-red-500" />
-                                          <span className={`text-[10px] font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
-                                            Recusados
-                                          </span>
-                                        </div>
-                                        <span className="text-[10px] font-bold text-red-500">
-                                          {rejected}
-                                        </span>
-                                      </div>
-                                    )}
-                                  </div>
-                                )
-                              })()}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
-                <div className="relative h-full min-h-[600px]">
-                  {Object.keys(trucksByDate).length === 0 && (
-                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-                      <div
-                        className={`mx-auto rounded-full p-6 mb-4 w-fit ${isDarkMode ? "bg-white/5" : "bg-gray-100"}`}
-                      >
-                        <svg
-                          className={`w-16 h-16 ${isDarkMode ? "text-gray-600" : "text-gray-400"}`}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+                        className={`group relative flex flex-col border-b border-r p-3 sm:p-4 transition-all ${
+                        dayData.month !== "current"
+                          ? isDarkMode
+                            ? "bg-white/[0.02]"
+                            : "bg-gray-50"
+                          : isDarkMode
+                            ? "bg-transparent hover:bg-white/[0.02]"
+                            : "bg-white hover:bg-gray-50/80"
+                      } ${isDarkMode ? "border-white/5" : "border-gray-200"} ${
+                        isCurrentMonth && truckCount > 0 ? "cursor-pointer" : ""
+                      }`}
+                      onClick={() => isCurrentMonth && truckCount > 0 && handleDayClick(dayData.date, truckCount)}
+                    >
+                      {/* Número do dia - posição superior esquerda */}
+                      <div className="mb-2">
+                        <span
+                          className={`inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full text-[10px] sm:text-xs font-semibold transition-colors ${
+                            !isCurrentMonth || showGrayCard
+                              ? "text-gray-400"
+                              : isDarkMode
+                                ? "text-gray-100"
+                                : "text-gray-900"
+                          }`}
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={1.5}
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
+                          {dayData.day}
+                        </span>
                       </div>
-                      <p className={`text-base font-semibold mb-2 ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
-                        Nenhum dado disponível
-                      </p>
-                      <p className={`text-sm max-w-xs ${isDarkMode ? "text-gray-500" : "text-gray-500"}`}>
-                        Os dados de recepção para este período serão exibidos aqui quando disponíveis.
-                      </p>
+
+                      {/* Badge de caminhões - estilo pill */}
+                      {isCurrentMonth && truckCount > 0 && (
+                        <div className="flex-1 flex items-start">
+                          <div className={`relative inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full transition-all duration-200 group-hover:scale-105 group-hover:shadow-md ${
+                            qualityStatus === "incomplete"
+                              ? isDarkMode 
+                                ? "bg-rose-500/15 border border-rose-500/30" 
+                                : "bg-rose-100 border border-rose-300"
+                              : isDarkMode
+                                ? "bg-emerald-500/15 border border-emerald-500/30"
+                                : "bg-emerald-100 border border-emerald-300"
+                          }`}>
+                            {/* Indicador de status - borda lateral transformada em dot */}
+                            <div
+                              className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${
+                                (() => {
+                                  const qualityIndicator = getDayQualityIndicator(dayData.date)
+                                  if (qualityIndicator === "rejected") return "bg-red-500"
+                                  if (qualityIndicator === "apurado") return "bg-amber-500"
+                                  return qualityStatus === "incomplete" 
+                                    ? isDarkMode ? "bg-rose-400" : "bg-rose-500"
+                                    : isDarkMode ? "bg-emerald-400" : "bg-emerald-500"
+                                })()
+                              }`}
+                            />
+                            <TruckIcon className={`h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0 ${iconColorClasses}`} />
+                            <span className={`text-[10px] sm:text-xs font-bold ${textColorClasses}`}>
+                              {truckCount.toLocaleString("pt-BR")}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Hover Preview Melhorado - Estilo Card */}
+                      {isCurrentMonth && truckCount > 0 && (
+                        <div className={`absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 rounded-lg z-10 ${
+                          isDarkMode 
+                            ? "bg-slate-900/95 backdrop-blur-sm" 
+                            : "bg-white/98 backdrop-blur-sm shadow-xl"
+                        }`}>
+                          <div className="p-3 w-full">
+                            {/* Header do preview */}
+                            <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-200/20">
+                              <Calendar className={`h-3.5 w-3.5 ${isDarkMode ? "text-blue-400" : "text-blue-600"}`} />
+                              <p className={`text-[11px] font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                                {truckCount} caminhõe{truckCount > 1 ? "s" : ""}
+                              </p>
+                            </div>
+                            
+                            {/* Status breakdown com ícones */}
+                            {(() => {
+                              const dateStr = `${dayData.date.getFullYear()}-${String(dayData.date.getMonth() + 1).padStart(2, "0")}-${String(dayData.date.getDate()).padStart(2, "0")}`
+                              const trucks = trucksByDate[dateStr] || []
+                              const approved = trucks.filter(t => t.status === "approved").length
+                              const apurado = trucks.filter(t => t.status === "apurado").length
+                              const rejected = trucks.filter(t => t.status === "rejected").length
+                              
+                              return (
+                                <div className="space-y-1.5">
+                                  {approved > 0 && (
+                                    <div className="flex items-center justify-between">
+                                      <div className="flex items-center gap-1.5">
+                                        <CheckCircle2 className="h-3 w-3 text-emerald-500" />
+                                        <span className={`text-[10px] font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
+                                          Aprovados
+                                        </span>
+                                      </div>
+                                      <span className="text-[10px] font-bold text-emerald-500">
+                                        {approved}
+                                      </span>
+                                    </div>
+                                  )}
+                                  {apurado > 0 && (
+                                    <div className="flex items-center justify-between">
+                                      <div className="flex items-center gap-1.5">
+                                        <AlertTriangle className="h-3 w-3 text-amber-500" />
+                                        <span className={`text-[10px] font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
+                                          Apontados
+                                        </span>
+                                      </div>
+                                      <span className="text-[10px] font-bold text-amber-500">
+                                        {apurado}
+                                      </span>
+                                    </div>
+                                  )}
+                                  {rejected > 0 && (
+                                    <div className="flex items-center justify-between">
+                                      <div className="flex items-center gap-1.5">
+                                        <XCircle className="h-3 w-3 text-red-500" />
+                                        <span className={`text-[10px] font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
+                                          Recusados
+                                        </span>
+                                      </div>
+                                      <span className="text-[10px] font-bold text-red-500">
+                                        {rejected}
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                              )
+                            })()}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
+                  )
+                })}
               </div>
+              {Object.keys(trucksByDate).length === 0 && (
+                <div className="relative h-full min-h-[600px]">
+                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+                    <div
+                      className={`mx-auto rounded-full p-6 mb-4 w-fit ${isDarkMode ? "bg-white/5" : "bg-gray-100"}`}
+                    >
+                      <svg
+                        className={`w-16 h-16 ${isDarkMode ? "text-gray-600" : "text-gray-400"}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                    </div>
+                    <p className={`text-base font-semibold mb-2 ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
+                      Nenhum dado disponível
+                    </p>
+                    <p className={`text-sm max-w-xs ${isDarkMode ? "text-gray-500" : "text-gray-500"}`}>
+                      Os dados de recepção para este período serão exibidos aqui quando disponíveis.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <EmbarqueModule

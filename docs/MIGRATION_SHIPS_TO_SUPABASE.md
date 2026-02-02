@@ -29,7 +29,7 @@ Acesse: **Supabase Dashboard → SQL Editor**
 
 Execute este script SQL:
 
-```sql
+\`\`\`sql
 -- Criar tabela de navios
 CREATE TABLE IF NOT EXISTS navios (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS navios (
 -- Criar índices para performance
 CREATE INDEX IF NOT EXISTS idx_navios_data_embarque ON navios(data_embarque);
 CREATE INDEX IF NOT EXISTS idx_navios_navio ON navios(navio);
-```
+\`\`\`
 
 ### **Passo 2: Migrar Dados do Blob para Supabase**
 
@@ -65,7 +65,7 @@ Você tem 2 opções:
 #### **Opção B: Criar script de migração (automatizado)**
 Crie um arquivo `scripts/migrate-ships-to-supabase.ts`:
 
-```typescript
+\`\`\`typescript
 import { createClient } from "@/lib/supabase/server"
 
 async function migrateShips() {
@@ -99,7 +99,7 @@ async function migrateShips() {
     console.log("✅ Migração completa!")
   }
 }
-```
+\`\`\`
 
 ### **Passo 3: Testar a Nova Rota**
 
@@ -122,7 +122,7 @@ No browser DevTools → Network:
 
 ## 📊 Estrutura do Banco Esperada
 
-```
+\`\`\`
 Tabela: navios
 
 ┌─────────────────────────────────────────┐
@@ -143,7 +143,7 @@ Tabela: navios
 │ created_at      │ TIMESTAMP│             │
 │ updated_at      │ TIMESTAMP│             │
 └─────────────────────────────────────────┘
-```
+\`\`\`
 
 ---
 
