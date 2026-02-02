@@ -1,8 +1,23 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
-import { X, Truck, CheckCircle, AlertTriangle, XCircle, ChevronRight, Clock, Search, History, Beaker, Scan, CheckCircle2, ChevronLeft, FileText } from "lucide-react"
-import { formatCor, formatPol, formatUmi, formatCin, formatRi, formatDateTimePtBr } from "@/lib/utils"
+import {
+  X,
+  Truck,
+  CheckCircle,
+  AlertTriangle,
+  XCircle,
+  ChevronRight,
+  Clock,
+  Search,
+  History,
+  Beaker,
+  Scan,
+  CheckCircle2,
+  ChevronLeft,
+  FileText,
+} from "lucide-react"
+import { formatCor, formatPol, formatUmi, formatCin, formatRi, formatDateTimePtBr, formatWeight } from "@/lib/utils"
 
 interface TruckData {
   id: string
@@ -532,6 +547,16 @@ export function DayViewMobileOverlay({
       apurado: completeTrucks.filter((t) => t.status === "apurado").length,
       rejected: completeTrucks.filter((t) => t.status === "rejected").length,
       awaiting: incompleteTrucks.length,
+      totalTonnage: dayTrucks.reduce((acc, t) => acc + (t.grossWeight || 0), 0),
+      approvedTonnage: completeTrucks
+        .filter((t) => t.status === "approved")
+        .reduce((acc, t) => acc + (t.grossWeight || 0), 0),
+      apuradoTonnage: completeTrucks
+        .filter((t) => t.status === "apurado")
+        .reduce((acc, t) => acc + (t.grossWeight || 0), 0),
+      rejectedTonnage: completeTrucks
+        .filter((t) => t.status === "rejected")
+        .reduce((acc, t) => acc + (t.grossWeight || 0), 0),
     }),
     [dayTrucks, completeTrucks, incompleteTrucks],
   )
@@ -585,46 +610,64 @@ export function DayViewMobileOverlay({
 
   return (
     <div className={`fixed inset-0 z-[9997] flex flex-col ${isDarkMode ? "bg-[#0a0f1a]" : "bg-slate-50"}`}>
-      {/* Header */}
+      {/* Header (Mobile) - alinhado com a identidade do calendário */}
       <header
         className={`shrink-0 flex items-center justify-between px-4 py-3 border-b ${
           isDarkMode ? "border-slate-800 bg-[#0d1220]" : "border-slate-200 bg-white"
         }`}
       >
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onPreviousDay}
-            className={`p-1.5 rounded-full ${isDarkMode ? "hover:bg-slate-800 text-slate-400" : "hover:bg-slate-100 text-slate-500"}`}
-            title="Dia anterior"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <div className="min-w-[100px]">
-            <h2 className={`font-semibold text-sm ${isDarkMode ? "text-white" : "text-slate-900"}`}>
-              {selectedDay.getDate()} de {months[selectedDay.getMonth()]}
-            </h2>
-            <p className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>{dayTrucks.length} caminhões</p>
-          </div>
-          <button
-            onClick={onNextDay}
-            className={`p-1.5 rounded-full ${isDarkMode ? "hover:bg-slate-800 text-slate-400" : "hover:bg-slate-100 text-slate-500"}`}
-            title="Próximo dia"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowSearch(!showSearch)}
-            className={`p-2 rounded-full ${isDarkMode ? "hover:bg-slate-800 text-slate-400" : "hover:bg-slate-100 text-slate-500"}`}
-          >
-            <Search className="w-5 h-5" />
-          </button>
+        <div className="flex items-center gap-3">
           <button
             onClick={onClose}
-            className={`p-2 rounded-full ${isDarkMode ? "hover:bg-slate-800 text-slate-400" : "hover:bg-slate-100 text-slate-500"}`}
+            className={`inline-flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-medium ${
+              isDarkMode
+                ? "text-slate-300 hover:text-white hover:bg-slate-800"
+                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+            }`}
           >
-            <X className="w-5 h-5" />
+            <ChevronLeft className="w-4 h-4" />
+            Retornar
+          </button>
+
+          <div className={`h-6 w-px ${isDarkMode ? "bg-slate-800" : "bg-slate-200"}`} />
+
+          <div className="flex items-center gap-1">
+            <button
+              onClick={onPreviousDay}
+              className={`p-1.5 rounded-full ${
+                isDarkMode ? "hover:bg-slate-800 text-slate-400" : "hover:bg-slate-100 text-slate-500"
+              }`}
+              title="Dia anterior"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <div className="min-w-[110px]">
+              <h2 className={`font-semibold text-sm ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                {selectedDay.getDate()} de {months[selectedDay.getMonth()]}
+              </h2>
+              <p className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>{dayTrucks.length} caminhões</p>
+            </div>
+            <button
+              onClick={onNextDay}
+              className={`p-1.5 rounded-full ${
+                isDarkMode ? "hover:bg-slate-800 text-slate-400" : "hover:bg-slate-100 text-slate-500"
+              }`}
+              title="Próximo dia"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setShowSearch(!showSearch)}
+            className={`p-2 rounded-full ${
+              isDarkMode ? "hover:bg-slate-800 text-slate-400" : "hover:bg-slate-100 text-slate-500"
+            }`}
+            title={showSearch ? "Fechar busca" : "Buscar"}
+          >
+            <Search className="w-5 h-5" />
           </button>
         </div>
       </header>
@@ -656,7 +699,7 @@ export function DayViewMobileOverlay({
 
       {kpis.awaiting > 0 && (
         <div
-          className={`flex items-start gap-2 p-3 rounded-lg text-xs ${
+          className={`mx-4 mt-3 flex items-start gap-2 p-3 rounded-lg text-xs ${
             isRecentDay
               ? isDarkMode
                 ? "bg-amber-500/10 border border-amber-500/20 text-amber-200"
@@ -709,64 +752,86 @@ export function DayViewMobileOverlay({
         </div>
       )}
 
-      {/* Cards de estatísticas */}
+      {/* Cards de estatísticas (Mobile) - mais legíveis e sem scroll horizontal */}
       {!showOnlyIncomplete && (
-        <div className="overflow-x-auto scrollbar-hide">
-          <div className="flex gap-3 p-4 min-w-max">
+        <div className="px-4 pb-2">
+          <div className="grid grid-cols-2 gap-3">
             {[
-              { label: "Total", value: kpis.total, icon: Truck, color: "blue", filter: "all" as const },
               {
-                label: "Aprovados",
+                label: "TOTAL",
+                value: kpis.total,
+                tonnage: kpis.totalTonnage,
+                icon: Truck,
+                bg: isDarkMode ? "bg-blue-950/40" : "bg-blue-50",
+                border: isDarkMode ? "border-blue-800/40" : "border-blue-200",
+                iconBg: isDarkMode ? "bg-blue-900/30" : "bg-blue-100",
+                iconColor: isDarkMode ? "text-blue-300" : "text-blue-600",
+                textColor: isDarkMode ? "text-blue-300" : "text-blue-700",
+                filter: "all" as const,
+              },
+              {
+                label: "APROVADOS",
                 value: kpis.approved,
+                tonnage: kpis.approvedTonnage,
                 icon: CheckCircle,
-                color: "green",
+                bg: isDarkMode ? "bg-green-950/40" : "bg-green-50",
+                border: isDarkMode ? "border-green-800/40" : "border-green-200",
+                iconBg: isDarkMode ? "bg-green-900/30" : "bg-green-100",
+                iconColor: isDarkMode ? "text-green-300" : "text-green-600",
+                textColor: isDarkMode ? "text-green-300" : "text-green-700",
                 filter: "approved" as const,
               },
               {
-                label: "Apontados",
+                label: "APONTADOS",
                 value: kpis.apurado,
+                tonnage: kpis.apuradoTonnage,
                 icon: AlertTriangle,
-                color: "amber",
+                bg: isDarkMode ? "bg-amber-950/40" : "bg-amber-50",
+                border: isDarkMode ? "border-amber-800/40" : "border-amber-200",
+                iconBg: isDarkMode ? "bg-amber-900/30" : "bg-amber-100",
+                iconColor: isDarkMode ? "text-amber-300" : "text-amber-600",
+                textColor: isDarkMode ? "text-amber-300" : "text-amber-700",
                 filter: "apurado" as const,
               },
-              { label: "Recusados", value: kpis.rejected, icon: XCircle, color: "rose", filter: "rejected" as const },
-            ].map((item) => {
-              const isActive = filterStatus === item.filter
-              const colorClasses = {
-                blue: isDarkMode ? "bg-blue-950/40 border-blue-800/40" : "bg-blue-50 border-blue-200",
-                green: isDarkMode ? "bg-green-950/40 border-green-800/40" : "bg-green-50 border-green-200",
-                amber: isDarkMode ? "bg-amber-950/40 border-amber-800/40" : "bg-amber-50 border-amber-200",
-                rose: isDarkMode ? "bg-rose-950/40 border-rose-800/40" : "bg-rose-50 border-rose-200",
-              }
-              const iconColors = {
-                blue: isDarkMode ? "text-blue-400" : "text-blue-500",
-                green: isDarkMode ? "text-green-400" : "text-green-500",
-                amber: isDarkMode ? "text-amber-400" : "text-amber-500",
-                rose: isDarkMode ? "text-rose-400" : "text-rose-500",
-              }
-              const textColors = {
-                blue: isDarkMode ? "text-blue-400" : "text-blue-700",
-                green: isDarkMode ? "text-green-400" : "text-green-700",
-                amber: isDarkMode ? "text-amber-400" : "text-amber-700",
-                rose: isDarkMode ? "text-rose-400" : "text-rose-700",
-              }
-
+              {
+                label: "RECUSADOS",
+                value: kpis.rejected,
+                tonnage: kpis.rejectedTonnage,
+                icon: XCircle,
+                bg: isDarkMode ? "bg-rose-950/40" : "bg-rose-50",
+                border: isDarkMode ? "border-rose-800/40" : "border-rose-200",
+                iconBg: isDarkMode ? "bg-rose-900/30" : "bg-rose-100",
+                iconColor: isDarkMode ? "text-rose-300" : "text-rose-600",
+                textColor: isDarkMode ? "text-rose-300" : "text-rose-700",
+                filter: "rejected" as const,
+              },
+            ].map((card) => {
+              const isActive = filterStatus === card.filter
               return (
                 <button
-                  key={item.filter}
-                  onClick={() => setFilterStatus(item.filter)}
-                  className={`flex-shrink-0 w-28 p-3 rounded-xl border transition-all ${
-                    colorClasses[item.color as keyof typeof colorClasses]
-                  } ${isActive ? "ring-2 ring-sky-500 ring-offset-1 " + (isDarkMode ? "ring-offset-slate-900" : "ring-offset-white") : ""}`}
+                  key={card.label}
+                  onClick={() => setFilterStatus(card.filter)}
+                  className={`relative rounded-xl border ${card.bg} ${card.border} p-3.5 text-left transition-all active:scale-[0.99] ${
+                    isActive
+                      ? "ring-2 ring-sky-500 ring-offset-1 " +
+                        (isDarkMode ? "ring-offset-slate-900" : "ring-offset-white")
+                      : ""
+                  }`}
                 >
-                  <div className="flex items-center gap-2 mb-1">
-                    <item.icon className={`w-4 h-4 ${iconColors[item.color as keyof typeof iconColors]}`} />
-                    <span className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>{item.label}</span>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className={`text-[10px] font-semibold uppercase tracking-wide ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
+                        {card.label}
+                      </p>
+                      <p className={`mt-1 text-2xl font-bold ${card.textColor}`}>{card.value}</p>
+                      <p className={`mt-0.5 text-[11px] ${isDarkMode ? "text-slate-400" : "text-slate-600"}`}>
+                        {formatWeight(card.tonnage)} toneladas
+                      </p>
+                    </div>
+                    <div className={`${card.iconBg} rounded-lg p-2 shrink-0`}>
+                      <card.icon className={`h-5 w-5 ${card.iconColor}`} />
+                    </div>
                   </div>
-                  <p className={`text-xl font-bold ${textColors[item.color as keyof typeof textColors]}`}>
-                    {item.value}
-                  </p>
-                  <p className={`text-[10px] mt-1 ${iconColors[item.color as keyof typeof iconColors]}`}>NIR</p>
                 </button>
               )
             })}
