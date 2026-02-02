@@ -1849,12 +1849,10 @@ export function DayViewOverlay({
                         )}
                       </div>
                     )
-                  })
-                })()}
+                  })()}
               </div>
             )}
           </div>
-        </div>
         </div>
 
         {/* Right Column - Sidebar (Quality Snapshot + Alerts) */}
