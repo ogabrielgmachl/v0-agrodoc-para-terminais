@@ -143,7 +143,8 @@ const months = [
 
 const monthsShort = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
 
-const weekDays = ["D", "S", "T", "Q", "Q", "S", "S"]
+// Mobile: use clearer weekday abbreviations for readability
+const weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
 
 const generateCalendarDays = (year: number, month: number) => {
   const firstDay = new Date(year, month, 1)
@@ -643,12 +644,18 @@ export function DashboardMobile({
               <>
                 {/* Week Days Header */}
                 <div
-                  className={`grid grid-cols-7 gap-1 px-3 py-2 flex-shrink-0 ${isDarkMode ? "bg-white/5" : "bg-gray-50"}`}
+                  className={cn(
+                    "grid grid-cols-7 px-3 py-2 flex-shrink-0 border-b",
+                    isDarkMode ? "bg-white/5 border-white/10" : "bg-gray-50 border-gray-200"
+                  )}
                 >
                   {weekDays.map((day, index) => (
                     <div
                       key={index}
-                      className={`text-center text-[11px] font-semibold py-1 ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}
+                      className={cn(
+                        "text-center text-xs font-medium tracking-wide py-1",
+                        isDarkMode ? "text-gray-300" : "text-gray-600"
+                      )}
                     >
                       {day}
                     </div>
@@ -678,7 +685,8 @@ export function DashboardMobile({
                         key={index}
                         onClick={() => dayInfo.month === "current" && truckCount > 0 && handleMobileDayClick(dayInfo.date)}
                         className={cn(
-                          "relative flex flex-col p-1.5 transition-all border-b border-r min-h-[70px]",
+                          // Slightly bigger cells for legibility + better touch
+                          "relative flex flex-col p-2 transition-all border-b border-r min-h-[76px]",
                           dayInfo.month !== "current"
                             ? isDarkMode
                               ? "bg-white/[0.02]"
@@ -691,10 +699,10 @@ export function DashboardMobile({
                         )}
                       >
                         {/* Número do dia - badge circular */}
-                        <div className="mb-1.5">
+                        <div className="mb-2">
                           <span
                             className={cn(
-                              "inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-semibold",
+                              "inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-semibold",
                               dayInfo.month !== "current" || (truckCount === 0 && isPastDate)
                                 ? "text-gray-400"
                                 : isDarkMode
@@ -710,7 +718,8 @@ export function DashboardMobile({
                         {dayInfo.month === "current" && truckCount > 0 && (
                           <div className="flex-1 flex items-start">
                             <div className={cn(
-                              "inline-flex items-center gap-1 px-1.5 py-1 rounded-full transition-all",
+                              // Bigger pill for readability + better touch
+                              "inline-flex items-center gap-1.5 px-2 py-1.5 rounded-full transition-all",
                               hasIncomplete
                                 ? isDarkMode 
                                   ? "bg-rose-500/15 border border-rose-500/30" 
@@ -722,7 +731,7 @@ export function DashboardMobile({
                               {/* Status dot */}
                               <div
                                 className={cn(
-                                  "w-1 h-1 rounded-full",
+                                  "w-1.5 h-1.5 rounded-full",
                                   qualityIndicator === "rejected" 
                                     ? "bg-red-500" 
                                     : qualityIndicator === "apurado"
@@ -734,14 +743,14 @@ export function DashboardMobile({
                               />
                               {/* Ícone */}
                               <Truck className={cn(
-                                "h-2.5 w-2.5 shrink-0",
+                                "h-3 w-3 shrink-0",
                                 hasIncomplete
                                   ? isDarkMode ? "text-rose-300" : "text-rose-600"
                                   : isDarkMode ? "text-emerald-300" : "text-emerald-700"
                               )} />
                               {/* Número */}
                               <span className={cn(
-                                "text-[9px] font-bold",
+                                "text-[11px] font-semibold",
                                 hasIncomplete
                                   ? isDarkMode ? "text-rose-300" : "text-rose-700"
                                   : isDarkMode ? "text-emerald-300" : "text-emerald-700"
