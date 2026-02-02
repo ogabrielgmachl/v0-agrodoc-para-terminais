@@ -114,7 +114,11 @@ const generateCalendarDays = (year: number, month: number) => {
     })
   }
 
-  const remainingCells = 42 - days.length
+  // Calculate exact number of weeks needed (avoid extra week)
+  const totalDays = startingDayOfWeek + daysInMonth
+  const weeksNeeded = Math.ceil(totalDays / 7)
+  const remainingCells = (weeksNeeded * 7) - days.length
+  
   for (let day = 1; day <= remainingCells; day++) {
     days.push({
       day,
@@ -871,7 +875,7 @@ export function DashboardDesktop({
                 {currentModule === "recepcao" ? (
                   <>
                     {/* KPIs de Recepção - Design Melhorado */}
-                    <div className={`rounded-xl p-4 border-2 transition-all ${isDarkMode ? "bg-gradient-to-br from-slate-800/80 to-slate-900/80 border-slate-700/50" : "bg-gradient-to-br from-white to-gray-50 border-gray-200 shadow-sm"}`}>
+                    <div className={`rounded-xl p-4 border-2 transition-all ${isDarkMode ? "bg-gradient-to-br from-slate-800/80 to-slate-900/80 border-slate-700/50" : "bg-gradient-to-br from-white to-gray-50 border-gray-200"}`}>
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
                           <div className={`p-2 rounded-lg ${isDarkMode ? "bg-emerald-500/20" : "bg-blue-100"}`}>
@@ -888,7 +892,7 @@ export function DashboardDesktop({
                       <p className={`text-xs mt-1 ${isDarkMode ? "text-gray-500" : "text-gray-500"}`}>caminhões no mês</p>
                     </div>
 
-                    <div className={`rounded-xl p-4 border-2 transition-all ${isDarkMode ? "bg-gradient-to-br from-slate-800/80 to-slate-900/80 border-slate-700/50" : "bg-gradient-to-br from-white to-gray-50 border-gray-200 shadow-sm"}`}>
+                    <div className={`rounded-xl p-4 border-2 transition-all ${isDarkMode ? "bg-gradient-to-br from-slate-800/80 to-slate-900/80 border-slate-700/50" : "bg-gradient-to-br from-white to-gray-50 border-gray-200"}`}>
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
                           <div className={`p-2 rounded-lg ${isDarkMode ? "bg-emerald-500/20" : "bg-green-100"}`}>
@@ -905,7 +909,7 @@ export function DashboardDesktop({
                       <p className={`text-xs mt-1 ${isDarkMode ? "text-gray-500" : "text-gray-500"}`}>toneladas no mês</p>
                     </div>
 
-                    <div className={`rounded-xl p-4 border-2 transition-all ${isDarkMode ? "bg-gradient-to-br from-slate-800/80 to-slate-900/80 border-slate-700/50" : "bg-gradient-to-br from-white to-gray-50 border-gray-200 shadow-sm"}`}>
+                    <div className={`rounded-xl p-4 border-2 transition-all ${isDarkMode ? "bg-gradient-to-br from-slate-800/80 to-slate-900/80 border-slate-700/50" : "bg-gradient-to-br from-white to-gray-50 border-gray-200"}`}>
                       <div className="flex items-center gap-2 mb-3">
                         <div className={`p-2 rounded-lg ${isDarkMode ? "bg-emerald-500/20" : "bg-amber-100"}`}>
                           <Activity className={`h-4 w-4 ${isDarkMode ? "text-emerald-400" : "text-amber-600"}`} />
@@ -1155,19 +1159,23 @@ export function DashboardDesktop({
                     return (
                       <div
                         key={idx}
-                        className={`flex flex-col border-b border-r p-1 sm:p-2 min-h-[80px] sm:min-h-[100px] ${
+                        className={`group relative flex flex-col border-b border-r p-2 sm:p-3 min-h-[90px] sm:min-h-[110px] transition-all ${
                           dayData.month !== "current"
                             ? isDarkMode
                               ? "bg-white/[0.02]"
                               : "bg-gray-50"
                             : isDarkMode
-                              ? "bg-transparent"
-                              : "bg-white"
-                        } ${isDarkMode ? "border-white/5" : "border-gray-200"}`}
+                              ? "bg-transparent hover:bg-white/[0.02]"
+                              : "bg-white hover:bg-gray-50/80"
+                        } ${isDarkMode ? "border-white/5" : "border-gray-200"} ${
+                          isCurrentMonth && truckCount > 0 ? "cursor-pointer" : ""
+                        }`}
+                        onClick={() => isCurrentMonth && truckCount > 0 && handleDayClick(dayData.date, truckCount)}
                       >
-                        <div className="mb-0.5 sm:mb-1 text-right">
+                        {/* Número do dia - posição superior esquerda */}
+                        <div className="mb-2">
                           <span
-                            className={`text-[10px] sm:text-xs font-medium ${
+                            className={`inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full text-[10px] sm:text-xs font-semibold transition-colors ${
                               !isCurrentMonth || showGrayCard
                                 ? "text-gray-400"
                                 : isDarkMode
@@ -1179,73 +1187,110 @@ export function DashboardDesktop({
                           </span>
                         </div>
 
-                        <button
-                          onClick={() => handleDayClick(dayData.date, truckCount)}
-                          className={`group relative flex-1 flex items-center justify-center gap-1.5 rounded-lg sm:rounded-xl overflow-hidden backdrop-blur-sm ${cardColorClasses} transition-all hover:scale-[1.02] hover:shadow-lg active:scale-95 ${
-                            !isCurrentMonth ? "opacity-60" : ""
-                          }`}
-                        >
-                          {/* Borda lateral de status */}
-                          {isCurrentMonth && truckCount > 0 && (
-                            <div
-                              className={`absolute left-0 top-0 bottom-0 w-1 sm:w-1.5 ${
-                                (() => {
-                                  const qualityIndicator = getDayQualityIndicator(dayData.date)
-                                  if (qualityIndicator === "rejected") return "bg-red-500"
-                                  if (qualityIndicator === "apurado") return "bg-amber-500"
-                                  return qualityStatus === "incomplete" 
-                                    ? isDarkMode ? "bg-rose-400" : "bg-rose-500"
-                                    : isDarkMode ? "bg-emerald-400" : "bg-emerald-500"
-                                })()
-                              }`}
-                            />
-                          )}
-                          
-                          <TruckIcon className={`h-3 w-3 sm:h-4 sm:w-4 shrink-0 ${iconColorClasses}`} />
-                          <span className={`text-xs sm:text-sm font-bold ${textColorClasses}`}>
-                            {truckCount !== undefined && truckCount > 0 ? truckCount.toLocaleString("pt-BR") : "0"}
-                          </span>
-
-                          {/* Hover Preview */}
-                          {isCurrentMonth && truckCount > 0 && (
-                            <div className={`absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg sm:rounded-xl ${
-                              isDarkMode ? "bg-slate-900/90" : "bg-white/95"
+                        {/* Badge de caminhões - estilo pill */}
+                        {isCurrentMonth && truckCount > 0 && (
+                          <div className="flex-1 flex items-start">
+                            <div className={`relative inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full transition-all duration-200 group-hover:scale-105 group-hover:shadow-md ${
+                              qualityStatus === "incomplete"
+                                ? isDarkMode 
+                                  ? "bg-rose-500/15 border border-rose-500/30" 
+                                  : "bg-rose-100 border border-rose-300"
+                                : isDarkMode
+                                  ? "bg-emerald-500/15 border border-emerald-500/30"
+                                  : "bg-emerald-100 border border-emerald-300"
                             }`}>
-                              <div className="text-center px-1">
-                                <p className={`text-[10px] sm:text-xs font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>
-                                  {truckCount} caminhões
-                                </p>
-                                {(() => {
-                                  const dateStr = `${dayData.date.getFullYear()}-${String(dayData.date.getMonth() + 1).padStart(2, "0")}-${String(dayData.date.getDate()).padStart(2, "0")}`
-                                  const trucks = trucksByDate[dateStr] || []
-                                  const approved = trucks.filter(t => t.status === "approved").length
-                                  const apurado = trucks.filter(t => t.status === "apurado").length
-                                  const rejected = trucks.filter(t => t.status === "rejected").length
-                                  
-                                  return (
-                                    <div className="flex items-center justify-center gap-1.5 mt-1">
-                                      {approved > 0 && (
-                                        <span className="flex items-center gap-0.5 text-[9px] sm:text-[10px] text-emerald-500">
-                                          <CheckCircle2 className="h-2.5 w-2.5" />{approved}
-                                        </span>
-                                      )}
-                                      {apurado > 0 && (
-                                        <span className="flex items-center gap-0.5 text-[9px] sm:text-[10px] text-amber-500">
-                                          <AlertTriangle className="h-2.5 w-2.5" />{apurado}
-                                        </span>
-                                      )}
-                                      {rejected > 0 && (
-                                        <span className="flex items-center gap-0.5 text-[9px] sm:text-[10px] text-red-500">
-                                          <XCircle className="h-2.5 w-2.5" />{rejected}
-                                        </span>
-                                      )}
-                                    </div>
-                                  )
-                                })()}
-                              </div>
+                              {/* Indicador de status - borda lateral transformada em dot */}
+                              <div
+                                className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${
+                                  (() => {
+                                    const qualityIndicator = getDayQualityIndicator(dayData.date)
+                                    if (qualityIndicator === "rejected") return "bg-red-500"
+                                    if (qualityIndicator === "apurado") return "bg-amber-500"
+                                    return qualityStatus === "incomplete" 
+                                      ? isDarkMode ? "bg-rose-400" : "bg-rose-500"
+                                      : isDarkMode ? "bg-emerald-400" : "bg-emerald-500"
+                                  })()
+                                }`}
+                              />
+                              <TruckIcon className={`h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0 ${iconColorClasses}`} />
+                              <span className={`text-[10px] sm:text-xs font-bold ${textColorClasses}`}>
+                                {truckCount.toLocaleString("pt-BR")}
+                              </span>
                             </div>
-                          )}
-                        </button>
+                          </div>
+                        )}
+
+                        {/* Hover Preview Melhorado - Estilo Card */}
+                        {isCurrentMonth && truckCount > 0 && (
+                          <div className={`absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 rounded-lg z-10 ${
+                            isDarkMode 
+                              ? "bg-slate-900/95 backdrop-blur-sm" 
+                              : "bg-white/98 backdrop-blur-sm shadow-xl"
+                          }`}>
+                            <div className="p-3 w-full">
+                              {/* Header do preview */}
+                              <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-200/20">
+                                <Calendar className={`h-3.5 w-3.5 ${isDarkMode ? "text-blue-400" : "text-blue-600"}`} />
+                                <p className={`text-[11px] font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                                  {truckCount} caminhõe{truckCount > 1 ? "s" : ""}
+                                </p>
+                              </div>
+                              
+                              {/* Status breakdown com ícones */}
+                              {(() => {
+                                const dateStr = `${dayData.date.getFullYear()}-${String(dayData.date.getMonth() + 1).padStart(2, "0")}-${String(dayData.date.getDate()).padStart(2, "0")}`
+                                const trucks = trucksByDate[dateStr] || []
+                                const approved = trucks.filter(t => t.status === "approved").length
+                                const apurado = trucks.filter(t => t.status === "apurado").length
+                                const rejected = trucks.filter(t => t.status === "rejected").length
+                                
+                                return (
+                                  <div className="space-y-1.5">
+                                    {approved > 0 && (
+                                      <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-1.5">
+                                          <CheckCircle2 className="h-3 w-3 text-emerald-500" />
+                                          <span className={`text-[10px] font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
+                                            Aprovados
+                                          </span>
+                                        </div>
+                                        <span className="text-[10px] font-bold text-emerald-500">
+                                          {approved}
+                                        </span>
+                                      </div>
+                                    )}
+                                    {apurado > 0 && (
+                                      <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-1.5">
+                                          <AlertTriangle className="h-3 w-3 text-amber-500" />
+                                          <span className={`text-[10px] font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
+                                            Apontados
+                                          </span>
+                                        </div>
+                                        <span className="text-[10px] font-bold text-amber-500">
+                                          {apurado}
+                                        </span>
+                                      </div>
+                                    )}
+                                    {rejected > 0 && (
+                                      <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-1.5">
+                                          <XCircle className="h-3 w-3 text-red-500" />
+                                          <span className={`text-[10px] font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
+                                            Recusados
+                                          </span>
+                                        </div>
+                                        <span className="text-[10px] font-bold text-red-500">
+                                          {rejected}
+                                        </span>
+                                      </div>
+                                    )}
+                                  </div>
+                                )
+                              })()}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )
                   })}
