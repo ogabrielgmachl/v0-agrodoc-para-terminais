@@ -832,9 +832,11 @@ export function DayViewOverlay({
         </div>
       </header>
 
-      {/* Conteudo principal com scroll da pagina */}
-      <div className="flex-1 overflow-auto">
-        <div className="px-6 py-4 space-y-4">
+      {/* Conteudo principal - 2 colunas: Tabela + Sidebar */}
+      <div className="flex-1 overflow-hidden flex gap-6">
+        {/* Left Column - Main Table Area */}
+        <div className="flex-1 overflow-auto">
+          <div className="px-6 py-4 space-y-4">
           {kpis.awaiting > 0 && (
             <div
               className={`flex items-start gap-3 p-4 rounded-lg ${
@@ -1847,34 +1849,37 @@ export function DayViewOverlay({
                         )}
                       </div>
                     )
-                  })
-                })()}
+                  })()}
               </div>
             )}
           </div>
+        </div>
 
-          {/* Daily Averages Section - Simple Cards */}
-          {!showOnlyIncomplete && (dailyAverages.cor.arithmetic !== null || dailyAverages.pol.arithmetic !== null || dailyAverages.umi.arithmetic !== null || dailyAverages.cin.arithmetic !== null || dailyAverages.ri.arithmetic !== null) && (
-            <div className={`rounded-xl border ${isDarkMode ? "bg-slate-900/50 border-slate-700" : "bg-white border-slate-200"}`}>
-              <div className={`px-6 py-4 border-b ${isDarkMode ? 'border-slate-700' : 'border-slate-200'}`}>
-                <div className="flex items-center gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  </svg>
-                  <h3 className={`text-sm font-semibold ${isDarkMode ? "text-slate-200" : "text-slate-900"}`}>
-                    Médias do Dia
-                  </h3>
+        {/* Right Column - Sidebar (Quality Snapshot + Alerts) */}
+        <div className="w-96 overflow-auto border-l">
+          <div className="p-6 space-y-6">
+            {/* Daily Averages Section - Quality Snapshot */}
+            {!showOnlyIncomplete && (dailyAverages.cor.arithmetic !== null || dailyAverages.pol.arithmetic !== null || dailyAverages.umi.arithmetic !== null || dailyAverages.cin.arithmetic !== null || dailyAverages.ri.arithmetic !== null) && (
+              <div className={`rounded-xl border ${isDarkMode ? "bg-slate-900/50 border-slate-700" : "bg-white border-slate-200"}`}>
+                <div className={`px-4 py-3 border-b ${isDarkMode ? 'border-slate-700' : 'border-slate-200'}`}>
+                  <div className="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    <h3 className={`text-xs font-semibold ${isDarkMode ? "text-slate-200" : "text-slate-900"}`}>
+                      Quality Snapshot
+                    </h3>
+                  </div>
                 </div>
-              </div>
-              <div className="p-6">
-                <div className="grid grid-cols-5 gap-4">
+                <div className="p-4">
+                  <div className="space-y-3">
                   {/* COR Card */}
                   {dailyAverages.cor.arithmetic !== null && (() => {
                     const isOutOfSpec = dailyAverages.cor.arithmetic > qualityLimits.cor.max
                     return (
-                    <div className={`p-4 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>COR</span>
+                    <div className={`p-3 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className={`text-xs font-bold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>COR</span>
                         {isOutOfSpec && (
                           <span className="flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75" />
@@ -1882,24 +1887,24 @@ export function DayViewOverlay({
                           </span>
                         )}
                       </div>
-                      <div className="space-y-2">
+                      <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Aritmética</div>
-                          <div className={`text-2xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
+                          <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Aritm.</div>
+                          <div className={`text-lg font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
                             {formatCor(dailyAverages.cor.arithmetic)}
                           </div>
                         </div>
                         {dailyAverages.cor.weighted !== null && (
                           <div>
-                            <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Ponderada</div>
+                            <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Pond.</div>
                             <div className={`text-lg font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
                               {formatCor(dailyAverages.cor.weighted)}
                             </div>
                           </div>
                         )}
                       </div>
-                      <div className={`mt-3 pt-3 border-t text-xs ${isDarkMode ? "border-slate-700 text-slate-400" : "border-slate-200 text-slate-500"}`}>
-                        Limite: {qualityLimits.cor.max}
+                      <div className={`mt-2 pt-2 border-t text-[10px] ${isDarkMode ? "border-slate-700 text-slate-500" : "border-slate-200 text-slate-400"}`}>
+                        Max: {qualityLimits.cor.max}
                       </div>
                     </div>
                     )
@@ -1909,9 +1914,9 @@ export function DayViewOverlay({
                   {dailyAverages.pol.arithmetic !== null && (() => {
                     const isOutOfSpec = dailyAverages.pol.arithmetic < qualityLimits.pol.min || dailyAverages.pol.arithmetic > qualityLimits.pol.max
                     return (
-                    <div className={`p-4 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>POL</span>
+                    <div className={`p-3 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className={`text-xs font-bold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>POL</span>
                         {isOutOfSpec && (
                           <span className="flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75" />
@@ -1919,24 +1924,24 @@ export function DayViewOverlay({
                           </span>
                         )}
                       </div>
-                      <div className="space-y-2">
+                      <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Aritmética</div>
-                          <div className={`text-2xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
+                          <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Aritm.</div>
+                          <div className={`text-lg font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
                             {formatPol(dailyAverages.pol.arithmetic)}
                           </div>
                         </div>
                         {dailyAverages.pol.weighted !== null && (
                           <div>
-                            <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Ponderada</div>
+                            <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Pond.</div>
                             <div className={`text-lg font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
                               {formatPol(dailyAverages.pol.weighted)}
                             </div>
                           </div>
                         )}
                       </div>
-                      <div className={`mt-3 pt-3 border-t text-xs ${isDarkMode ? "border-slate-700 text-slate-400" : "border-slate-200 text-slate-500"}`}>
-                        Faixa: {qualityLimits.pol.min} - {qualityLimits.pol.max}
+                      <div className={`mt-2 pt-2 border-t text-[10px] ${isDarkMode ? "border-slate-700 text-slate-500" : "border-slate-200 text-slate-400"}`}>
+                        Min: {qualityLimits.pol.min} | Max: {qualityLimits.pol.max}
                       </div>
                     </div>
                     )
@@ -1946,9 +1951,9 @@ export function DayViewOverlay({
                   {dailyAverages.umi.arithmetic !== null && (() => {
                     const isOutOfSpec = dailyAverages.umi.arithmetic > qualityLimits.um.max
                     return (
-                    <div className={`p-4 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>UMI</span>
+                    <div className={`p-3 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className={`text-xs font-bold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>UMI</span>
                         {isOutOfSpec && (
                           <span className="flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75" />
@@ -1956,24 +1961,24 @@ export function DayViewOverlay({
                           </span>
                         )}
                       </div>
-                      <div className="space-y-2">
+                      <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Aritmética</div>
-                          <div className={`text-2xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
+                          <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Aritm.</div>
+                          <div className={`text-lg font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
                             {formatUmi(dailyAverages.umi.arithmetic)}
                           </div>
                         </div>
                         {dailyAverages.umi.weighted !== null && (
                           <div>
-                            <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Ponderada</div>
+                            <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Pond.</div>
                             <div className={`text-lg font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
                               {formatUmi(dailyAverages.umi.weighted)}
                             </div>
                           </div>
                         )}
                       </div>
-                      <div className={`mt-3 pt-3 border-t text-xs ${isDarkMode ? "border-slate-700 text-slate-400" : "border-slate-200 text-slate-500"}`}>
-                        Limite: {qualityLimits.um.max}
+                      <div className={`mt-2 pt-2 border-t text-[10px] ${isDarkMode ? "border-slate-700 text-slate-500" : "border-slate-200 text-slate-400"}`}>
+                        Max: {qualityLimits.um.max}
                       </div>
                     </div>
                     )
@@ -1983,9 +1988,9 @@ export function DayViewOverlay({
                   {dailyAverages.cin.arithmetic !== null && (() => {
                     const isOutOfSpec = dailyAverages.cin.arithmetic > qualityLimits.cin.max
                     return (
-                    <div className={`p-4 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>CIN</span>
+                    <div className={`p-3 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className={`text-xs font-bold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>CIN</span>
                         {isOutOfSpec && (
                           <span className="flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75" />
@@ -1993,24 +1998,24 @@ export function DayViewOverlay({
                           </span>
                         )}
                       </div>
-                      <div className="space-y-2">
+                      <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Aritmética</div>
-                          <div className={`text-2xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
+                          <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Aritm.</div>
+                          <div className={`text-lg font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
                             {formatCin(dailyAverages.cin.arithmetic)}
                           </div>
                         </div>
                         {dailyAverages.cin.weighted !== null && (
                           <div>
-                            <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Ponderada</div>
+                            <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Pond.</div>
                             <div className={`text-lg font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
                               {formatCin(dailyAverages.cin.weighted)}
                             </div>
                           </div>
                         )}
                       </div>
-                      <div className={`mt-3 pt-3 border-t text-xs ${isDarkMode ? "border-slate-700 text-slate-400" : "border-slate-200 text-slate-500"}`}>
-                        Limite: {qualityLimits.cin.max}
+                      <div className={`mt-2 pt-2 border-t text-[10px] ${isDarkMode ? "border-slate-700 text-slate-500" : "border-slate-200 text-slate-400"}`}>
+                        Max: {qualityLimits.cin.max}
                       </div>
                     </div>
                     )
@@ -2020,9 +2025,9 @@ export function DayViewOverlay({
                   {dailyAverages.ri.arithmetic !== null && (() => {
                     const isOutOfSpec = dailyAverages.ri.arithmetic > qualityLimits.ri.max
                     return (
-                    <div className={`p-4 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>RI</span>
+                    <div className={`p-3 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className={`text-xs font-bold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>RI</span>
                         {isOutOfSpec && (
                           <span className="flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75" />
@@ -2030,39 +2035,145 @@ export function DayViewOverlay({
                           </span>
                         )}
                       </div>
-                      <div className="space-y-2">
+                      <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Aritmética</div>
-                          <div className={`text-2xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
+                          <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Aritm.</div>
+                          <div className={`text-lg font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
                             {formatRi(dailyAverages.ri.arithmetic)}
                           </div>
                         </div>
                         {dailyAverages.ri.weighted !== null && (
                           <div>
-                            <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Ponderada</div>
+                            <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Pond.</div>
                             <div className={`text-lg font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
                               {formatRi(dailyAverages.ri.weighted)}
                             </div>
                           </div>
                         )}
                       </div>
-                      <div className={`mt-3 pt-3 border-t text-xs ${isDarkMode ? "border-slate-700 text-slate-400" : "border-slate-200 text-slate-500"}`}>
-                        Limite: {qualityLimits.ri.max}
+                      <div className={`mt-2 pt-2 border-t text-[10px] ${isDarkMode ? "border-slate-700 text-slate-500" : "border-slate-200 text-slate-400"}`}>
+                        Max: {qualityLimits.ri.max}
                       </div>
                     </div>
                     )
                   })()}
+                  </div>
                 </div>
               </div>
+            )}
+
+            {/* Alerts Section */}
+            <div className={`rounded-xl border ${isDarkMode ? "bg-slate-900/50 border-slate-700" : "bg-white border-slate-200"}`}>
+              <div className={`px-4 py-3 border-b ${isDarkMode ? 'border-slate-700' : 'border-slate-200'}`}>
+                <div className="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                  </svg>
+                  <h3 className={`text-xs font-semibold ${isDarkMode ? "text-slate-200" : "text-slate-900"}`}>
+                    Alertas do Dia
+                  </h3>
+                </div>
+              </div>
+              <div className="p-4 space-y-2">
+                {/* Incompletos */}
+                {kpis.awaiting > 0 && (
+                  <div className={`p-3 rounded-lg border ${isDarkMode ? "bg-amber-500/10 border-amber-500/30" : "bg-amber-50 border-amber-200"}`}>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500" />
+                      </span>
+                      <span className={`text-xs font-bold ${isDarkMode ? "text-amber-300" : "text-amber-800"}`}>
+                        Dados Incompletos
+                      </span>
+                    </div>
+                    <p className={`text-xs ${isDarkMode ? "text-amber-200/80" : "text-amber-700"}`}>
+                      {kpis.awaiting} {kpis.awaiting === 1 ? "caminhão aguardando" : "caminhões aguardando"} análise
+                    </p>
+                  </div>
+                )}
+                
+                {/* Fora de spec */}
+                {completeTrucks.filter(t => 
+                  (t.cor !== null && isOutOfSpec("cor", t.cor)) ||
+                  (t.pol !== null && isOutOfSpec("pol", t.pol)) ||
+                  (t.umi !== null && isOutOfSpec("um", t.umi)) ||
+                  (t.cin !== null && isOutOfSpec("cin", t.cin)) ||
+                  (t.ri !== null && isOutOfSpec("ri", t.ri))
+                ).length > 0 && (
+                  <div className={`p-3 rounded-lg border ${isDarkMode ? "bg-red-500/10 border-red-500/30" : "bg-red-50 border-red-200"}`}>
+                    <div className="flex items-center gap-2 mb-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" className={`h-3 w-3 ${isDarkMode ? "text-red-300" : "text-red-600"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      <span className={`text-xs font-bold ${isDarkMode ? "text-red-300" : "text-red-800"}`}>
+                        Fora de Especificação
+                      </span>
+                    </div>
+                    <p className={`text-xs ${isDarkMode ? "text-red-200/80" : "text-red-700"}`}>
+                      {completeTrucks.filter(t => 
+                        (t.cor !== null && isOutOfSpec("cor", t.cor)) ||
+                        (t.pol !== null && isOutOfSpec("pol", t.pol)) ||
+                        (t.umi !== null && isOutOfSpec("um", t.umi)) ||
+                        (t.cin !== null && isOutOfSpec("cin", t.cin)) ||
+                        (t.ri !== null && isOutOfSpec("ri", t.ri))
+                      ).length} {completeTrucks.filter(t => 
+                        (t.cor !== null && isOutOfSpec("cor", t.cor)) ||
+                        (t.pol !== null && isOutOfSpec("pol", t.pol)) ||
+                        (t.umi !== null && isOutOfSpec("um", t.umi)) ||
+                        (t.cin !== null && isOutOfSpec("cin", t.cin)) ||
+                        (t.ri !== null && isOutOfSpec("ri", t.ri))
+                      ).length === 1 ? "caminhão com valores" : "caminhões com valores"} fora do limite
+                    </p>
+                  </div>
+                )}
+                
+                {/* Doublecheck */}
+                {completeTrucks.filter(t => hasDoublecheck(t)).length > 0 && (
+                  <div className={`p-3 rounded-lg border ${isDarkMode ? "bg-purple-500/10 border-purple-500/30" : "bg-purple-50 border-purple-200"}`}>
+                    <div className="flex items-center gap-2 mb-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" className={`h-3 w-3 ${isDarkMode ? "text-purple-300" : "text-purple-600"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                      </svg>
+                      <span className={`text-xs font-bold ${isDarkMode ? "text-purple-300" : "text-purple-800"}`}>
+                        Reanálises (Doublecheck)
+                      </span>
+                    </div>
+                    <p className={`text-xs ${isDarkMode ? "text-purple-200/80" : "text-purple-700"}`}>
+                      {completeTrucks.filter(t => hasDoublecheck(t)).length} {completeTrucks.filter(t => hasDoublecheck(t)).length === 1 ? "caminhão reanalisado" : "caminhões reanalisados"} pelo laboratório
+                    </p>
+                  </div>
+                )}
+                
+                {kpis.awaiting === 0 && completeTrucks.filter(t => 
+                  (t.cor !== null && isOutOfSpec("cor", t.cor)) ||
+                  (t.pol !== null && isOutOfSpec("pol", t.pol)) ||
+                  (t.umi !== null && isOutOfSpec("um", t.umi)) ||
+                  (t.cin !== null && isOutOfSpec("cin", t.cin)) ||
+                  (t.ri !== null && isOutOfSpec("ri", t.ri))
+                ).length === 0 && completeTrucks.filter(t => hasDoublecheck(t)).length === 0 && (
+                  <div className={`p-3 rounded-lg border ${isDarkMode ? "bg-green-500/10 border-green-500/30" : "bg-green-50 border-green-200"}`}>
+                    <div className="flex items-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" className={`h-3 w-3 ${isDarkMode ? "text-green-300" : "text-green-600"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className={`text-xs ${isDarkMode ? "text-green-200/80" : "text-green-700"}`}>
+                        Sem alertas pendentes
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-          )}
+          </div>
         </div>
+      </div>
       </div>
 
       {/* History Popup */}
       {historyPopup && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop */}\
           <div className="fixed inset-0 z-[110]" onClick={() => setHistoryPopup(null)} />
 
           {/* Popup */}

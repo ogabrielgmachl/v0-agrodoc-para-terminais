@@ -518,6 +518,7 @@ export function DayViewMobileOverlay({
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm)
   const [showSearch, setShowSearch] = useState(!!initialSearchTerm) // Show search if there's an initial term
   const [historyTruck, setHistoryTruck] = useState<TruckData | null>(null)
+  const [viewMode, setViewMode] = useState<"list" | "table">("list") // Toggle between list and table
 
   // Reset when day changes, but keep initialSearchTerm
   useEffect(() => {
@@ -836,18 +837,57 @@ export function DayViewMobileOverlay({
               )
             })}
           </div>
+
+          {/* View Mode Toggle */}
+          <div className={`flex gap-2 mt-3 p-1 rounded-lg ${isDarkMode ? "bg-slate-800/50" : "bg-slate-100"}`}>
+            <button
+              onClick={() => setViewMode("list")}
+              className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md text-xs font-semibold transition-all ${
+                viewMode === "list"
+                  ? isDarkMode
+                    ? "bg-slate-700 text-white shadow-sm"
+                    : "bg-white text-slate-900 shadow-sm"
+                  : isDarkMode
+                    ? "text-slate-400 hover:text-slate-300"
+                    : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              Lista
+            </button>
+            <button
+              onClick={() => setViewMode("table")}
+              className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md text-xs font-semibold transition-all ${
+                viewMode === "table"
+                  ? isDarkMode
+                    ? "bg-slate-700 text-white shadow-sm"
+                    : "bg-white text-slate-900 shadow-sm"
+                  : isDarkMode
+                    ? "text-slate-400 hover:text-slate-300"
+                    : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Tabela
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Lista de caminhoes */}
+      {/* Lista de caminhoes ou Tabela */}
       <div className="flex-1 overflow-auto px-4 pb-4">
-        <div className="space-y-2">
-          {filteredTrucks.length === 0 ? (
-            <div className={`text-center py-12 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
-              {showOnlyIncomplete ? "Todos os caminhões já possuem análises." : "Nenhum caminhão encontrado"}
-            </div>
-          ) : (
-            filteredTrucks.map((truck) => {
+        {viewMode === "list" ? (
+          <div className="space-y-2">
+            {filteredTrucks.length === 0 ? (
+              <div className={`text-center py-12 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
+                {showOnlyIncomplete ? "Todos os caminhões já possuem análises." : "Nenhum caminhão encontrado"}
+              </div>
+            ) : (
+              filteredTrucks.map((truck) => {
               const isExpanded = expandedTrucks.has(truck.id)
               const isIncomplete = hasIncompleteData(truck)
               
