@@ -1071,11 +1071,11 @@ export function DashboardDesktop({
 
         <main className="relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden">
           {currentModule === "recepcao" ? (
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 overflow-hidden p-2 sm:p-4 lg:p-6">
               <div
-                className={`relative z-0 h-full overflow-hidden ${isDarkMode ? "bg-[#020617]/80" : "bg-white"}`}
+                className={`relative z-0 h-full overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-xl backdrop-blur-xl ${isDarkMode ? "border border-white/10 bg-[#020617]/80" : "border border-gray-200 bg-white"}`}
               >
-                <div className="grid h-full grid-cols-7 auto-rows-fr overflow-y-auto calendar-scroll">
+                <div className="grid h-full grid-cols-7 grid-rows-[auto_repeat(6,1fr)] overflow-y-auto calendar-scroll">
                   {weekDays.map((day) => (
                     <div
                       key={day}
@@ -1159,7 +1159,7 @@ export function DashboardDesktop({
                     return (
                       <div
                         key={idx}
-                        className={`group relative flex flex-col border-b border-r p-3 sm:p-4 transition-all ${
+                        className={`group relative flex flex-col border-b border-r p-2 sm:p-3 min-h-[90px] sm:min-h-[110px] transition-all ${
                           dayData.month !== "current"
                             ? isDarkMode
                               ? "bg-white/[0.02]"
@@ -1173,9 +1173,9 @@ export function DashboardDesktop({
                         onClick={() => isCurrentMonth && truckCount > 0 && handleDayClick(dayData.date, truckCount)}
                       >
                         {/* Número do dia - posição superior esquerda */}
-                        <div className="mb-3">
+                        <div className="mb-2">
                           <span
-                            className={`inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full text-xs sm:text-sm font-semibold transition-colors ${
+                            className={`inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full text-[10px] sm:text-xs font-semibold transition-colors ${
                               !isCurrentMonth || showGrayCard
                                 ? "text-gray-400"
                                 : isDarkMode
@@ -1190,7 +1190,7 @@ export function DashboardDesktop({
                         {/* Badge de caminhões - estilo pill */}
                         {isCurrentMonth && truckCount > 0 && (
                           <div className="flex-1 flex items-start">
-                            <div className={`relative inline-flex items-center gap-2 px-3 py-2 rounded-full transition-all duration-200 group-hover:scale-105 group-hover:shadow-md ${
+                            <div className={`relative inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full transition-all duration-200 group-hover:scale-105 group-hover:shadow-md ${
                               qualityStatus === "incomplete"
                                 ? isDarkMode 
                                   ? "bg-rose-500/15 border border-rose-500/30" 
@@ -1201,7 +1201,7 @@ export function DashboardDesktop({
                             }`}>
                               {/* Indicador de status - borda lateral transformada em dot */}
                               <div
-                                className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full ${
+                                className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${
                                   (() => {
                                     const qualityIndicator = getDayQualityIndicator(dayData.date)
                                     if (qualityIndicator === "rejected") return "bg-red-500"
@@ -1212,8 +1212,8 @@ export function DashboardDesktop({
                                   })()
                                 }`}
                               />
-                              <TruckIcon className={`h-4 w-4 sm:h-4 sm:w-4 shrink-0 ${iconColorClasses}`} />
-                              <span className={`text-xs sm:text-sm font-bold ${textColorClasses}`}>
+                              <TruckIcon className={`h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0 ${iconColorClasses}`} />
+                              <span className={`text-[10px] sm:text-xs font-bold ${textColorClasses}`}>
                                 {truckCount.toLocaleString("pt-BR")}
                               </span>
                             </div>
