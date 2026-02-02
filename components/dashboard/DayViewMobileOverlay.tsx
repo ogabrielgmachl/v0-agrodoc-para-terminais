@@ -1160,10 +1160,71 @@ export function DayViewMobileOverlay({
                   )}
                 </div>
               )
-            })
-          )}
-        </div>
-      </div>
+	            })
+	          )}
+	        </div>
+	      ) : (
+	        <div
+	          className={`rounded-xl overflow-hidden ${
+	            isDarkMode ? "bg-slate-800/50 border border-slate-700/50" : "bg-white border border-slate-200"
+	          }`}
+	        >
+	          <div className={`px-3 py-2 border-b ${isDarkMode ? "border-slate-700/50" : "border-slate-200"}`}>
+	            <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>Tabela</span>
+	          </div>
+	          <div className="overflow-x-auto">
+	            <table className="w-full text-xs">
+	              <thead className={isDarkMode ? "bg-slate-800" : "bg-slate-50"}>
+	                <tr>
+	                  <th className="text-left font-semibold px-3 py-2">Placa</th>
+	                  <th className="text-left font-semibold px-3 py-2">Cliente</th>
+	                  <th className="text-right font-semibold px-3 py-2">Peso (t)</th>
+	                  <th className="text-left font-semibold px-3 py-2">Status</th>
+	                </tr>
+	              </thead>
+	              <tbody>
+	                {filteredTrucks.length === 0 ? (
+	                  <tr>
+	                    <td
+	                      colSpan={4}
+	                      className={`px-3 py-6 text-center ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}
+	                    >
+	                      {showOnlyIncomplete ? "Todos os caminhões já possuem análises." : "Nenhum caminhão encontrado"}
+	                    </td>
+	                  </tr>
+	                ) : (
+	                  filteredTrucks.map((truck) => (
+	                    <tr
+	                      key={truck.id}
+	                      className={isDarkMode ? "border-t border-slate-700/50" : "border-t border-slate-200"}
+	                    >
+	                      <td className={`px-3 py-2 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+	                        {truck.licensePlate}
+	                      </td>
+	                      <td className={`px-3 py-2 ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>
+	                        {truck.client || "-"}
+	                      </td>
+	                      <td className={`px-3 py-2 text-right ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>
+	                        {formatPeso(truck.grossWeight)}
+	                      </td>
+	                      <td className={`px-3 py-2 ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>
+	                        {hasIncompleteData(truck)
+	                          ? "Aguardando"
+	                          : truck.status === "approved"
+	                            ? "Aprovado"
+	                            : truck.status === "apurado" || (truck.status === "rejected" && truck.hasOtherOutOfSpec)
+	                              ? "Apontado"
+	                              : "Recusado"}
+	                      </td>
+	                    </tr>
+	                  ))
+	                )}
+	              </tbody>
+	            </table>
+	          </div>
+	        </div>
+	      )}
+	      </div>
 
       {/* History Sheet (Mobile fullscreen) */}
       {historyTruck && (
