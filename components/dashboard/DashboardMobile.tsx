@@ -130,7 +130,7 @@ const generateCalendarDays = (year: number, month: number) => {
   return days
 }
 
-interface DashboardDesktopProps {
+interface DashboardMobileProps {
   currentYear: number
   currentMonthIndex: number
   selectedDay: Date | null
@@ -210,7 +210,7 @@ interface DashboardDesktopProps {
 // Define ITEMS_PER_PAGE constant
 const ITEMS_PER_PAGE = 10
 
-export function DashboardDesktop({
+export function DashboardMobile({
   currentYear,
   currentMonthIndex,
   selectedDay,
@@ -258,7 +258,7 @@ export function DashboardDesktop({
   shipStatsByDate = {},
   totalPages: propTotalPages, // Renamed to avoid conflict
   onRefreshData, // Use the passed function
-}: DashboardDesktopProps) {
+}: DashboardMobileProps) {
   const [showOnlyIncomplete, setShowOnlyIncomplete] = useState(false)
   // Use a new state for searchTerm to avoid conflicts with props.searchQuery
   const [searchTerm, setSearchTerm] = useState(searchQuery || "")
