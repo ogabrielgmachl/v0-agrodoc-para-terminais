@@ -853,7 +853,7 @@ export function DayViewOverlay({
               <p className="text-sm flex-1">
                 {isRecentDay ? (
                   <>
-                    Aguardando compilação de dados de {kpis.awaiting} {kpis.awaiting === 1 ? "caminhão" : "caminhões"}.{' '}
+                    Aguardando compilação de dados de {kpis.awaiting} {kpis.awaiting === 1 ? "caminhão" : "caminhões"}.{" "}
                     <button
                       onClick={() => {
                         setShowOnlyIncomplete(!showOnlyIncomplete)
@@ -868,7 +868,8 @@ export function DayViewOverlay({
                   </>
                 ) : (
                   <>
-                    Dados de {kpis.awaiting} {kpis.awaiting === 1 ? "caminhão" : "caminhões"} já deveriam ter sido compilados.{' '}
+                    Dados de {kpis.awaiting} {kpis.awaiting === 1 ? "caminhão" : "caminhões"} já deveriam ter sido
+                    compilados.{" "}
                     <button
                       onClick={() => {
                         setShowOnlyIncomplete(!showOnlyIncomplete)
@@ -1848,7 +1849,8 @@ export function DayViewOverlay({
                         )}
                       </div>
                     )
-                  })()}
+	                  })
+	                })()}
               </div>
             )}
           </div>
@@ -2488,6 +2490,7 @@ export function DayViewOverlay({
           </div>
         </>
       )}
-    </div>
-  )
+	    </div>
+	  </div>
+	  )
 }
