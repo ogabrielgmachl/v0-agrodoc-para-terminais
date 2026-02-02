@@ -104,15 +104,11 @@ export function parseCsvDateFromFilename(filename: string): string | null {
  * Only checks "csv/caminhoes/" prefix.
  */
 export async function listTruckCsvByDate(): Promise<CsvByDateMap> {
-  console.log("[v0] listTruckCsvByDate called - token exists:", !!process.env.BLOB_READ_WRITE_TOKEN)
-  
   try {
     const { blobs } = await list({
       prefix: "csv/caminhoes/",
       token: process.env.BLOB_READ_WRITE_TOKEN,
     })
-
-    console.log("[v0] Blobs found:", blobs.length)
 
     const byDate: CsvByDateMap = {}
 
@@ -123,11 +119,9 @@ export async function listTruckCsvByDate(): Promise<CsvByDateMap> {
       const date = parseCsvDateFromFilename(filename)
       if (date) {
         byDate[date] = blob.url
-        console.log(`[v0] Found truck CSV for date ${date}: ${filename}`)
       }
     })
 
-    console.log("[v0] Total truck dates found:", Object.keys(byDate).length)
     return byDate
   } catch (error) {
     console.error("[v0] Error listing truck CSV files:", error instanceof Error ? error.message : error)
@@ -140,15 +134,11 @@ export async function listTruckCsvByDate(): Promise<CsvByDateMap> {
  * Only checks "csv/navios/" prefix.
  */
 export async function listShipCsvByDate(): Promise<CsvByDateMap> {
-  console.log("[v0] listShipCsvByDate called - token exists:", !!process.env.BLOB_READ_WRITE_TOKEN)
-  
   try {
     const { blobs } = await list({
       prefix: "csv/navios/",
       token: process.env.BLOB_READ_WRITE_TOKEN,
     })
-
-    console.log("[v0] Ship blobs found:", blobs.length)
 
     const byDate: CsvByDateMap = {}
 
@@ -159,11 +149,9 @@ export async function listShipCsvByDate(): Promise<CsvByDateMap> {
       const date = parseCsvDateFromFilename(filename)
       if (date) {
         byDate[date] = blob.url
-        console.log(`[v0] Found ship CSV for date ${date}: ${filename}`)
       }
     })
 
-    console.log("[v0] Total ship dates found:", Object.keys(byDate).length)
     return byDate
   } catch (error) {
     console.error("[v0] Error listing ship CSV files:", error instanceof Error ? error.message : error)

@@ -223,7 +223,7 @@ export default function DashboardPage() {
         setIsLoading(true)
         lastLoadTimestamp.current = Date.now()
 
-        const monthPrefix = `${currentYear}-${String(currentMonthIndex + 1).padStart(2, "0")}-`
+        let monthPrefix = `${currentYear}-${String(currentMonthIndex + 1).padStart(2, "0")}-`
 
         const [datesResponse, shipsResponse] = await Promise.all([
           fetch("/api/available-dates", { cache: "no-store" }),
@@ -231,7 +231,18 @@ export default function DashboardPage() {
         ])
 
         const { dates: availableDates } = await datesResponse.json()
-        const monthDates = availableDates.filter((d: string) => d.startsWith(monthPrefix))
+        let monthDates = availableDates.filter((d: string) => d.startsWith(monthPrefix))
+
+        // Se não houver dados para o mês atual, tenta o mês anterior
+        if (monthDates.length === 0 && availableDates.length > 0) {
+          console.log(`[v0] No data for month ${monthPrefix}, using most recent available data`)
+          // Pega a data mais recente disponível
+          const mostRecentDate = availableDates[availableDates.length - 1]
+          const [year, month] = mostRecentDate.split("-")
+          monthPrefix = `${year}-${month}-`
+          monthDates = availableDates.filter((d: string) => d.startsWith(monthPrefix))
+          console.log(`[v0] Using fallback month: ${monthPrefix} with ${monthDates.length} dates`)
+        }
 
         const alreadyLoaded = trucksByDateRef.current
         const datesToLoad = mode === "light" ? monthDates.filter((d: string) => !alreadyLoaded[d]) : monthDates
@@ -240,15 +251,11 @@ export default function DashboardPage() {
         const nextDayStatsByDate: Record<string, any> = { ...dayStatsByDateRef.current }
 
         if (datesToLoad.length > 0) {
-          console.log(`[v0] Loading trucks for ${datesToLoad.length} dates`)
           const allTrucksArrays = await Promise.all(datesToLoad.map((date: string) => loadTrucksForDate(date)))
-
-          console.log(`[v0] Received truck data:`, allTrucksArrays.filter((t) => t && t.length > 0).length, "dates with data")
 
           datesToLoad.forEach((date: string, index: number) => {
             const trucksForDate = allTrucksArrays[index]
             if (trucksForDate && trucksForDate.length > 0) {
-              console.log(`[v0] Processing ${trucksForDate.length} trucks for ${date}`)
               newTrucksByDate[date] = trucksForDate.map((truck: any) => ({
                 id: truck.id,
                 licensePlate: truck.licensePlate,

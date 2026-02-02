@@ -258,7 +258,6 @@ export function clearTruckCache() {
 async function loadTrucksFromCsv(path: string): Promise<Truck[]> {
     const cached = csvCache.get(path)
   if (cached && Date.now() - cached.ts < CSV_CACHE_TTL) {
-    console.log(`[v0] Using cached trucks for: ${path}`)
     return cached.data
   }
 
@@ -266,18 +265,15 @@ async function loadTrucksFromCsv(path: string): Promise<Truck[]> {
     const cacheBuster = `?v=${Date.now()}`
     const urlWithCacheBuster = path.includes("?") ? `${path}&v=${Date.now()}` : `${path}${cacheBuster}`
 
-    console.log(`[v0] Fetching trucks from CSV: ${urlWithCacheBuster}`)
     const response = await fetch(urlWithCacheBuster, { cache: "no-store" })
 
     if (!response.ok) {
-      console.log(`[v0] Arquivo CSV não encontrado (${response.status}): ${path}`)
       csvCache.set(path, { data: [], ts: Date.now() })
       return []
     }
 
     const text = await response.text()
     const lines = text.trim().split(/\r?\n/)
-    console.log(`[v0] CSV loaded with ${lines.length} lines from ${path}`)
 
     const headerLine = lines[0]
     const headers = parseCsvLine(headerLine).map((h) => h.trim().toLowerCase())
@@ -580,8 +576,6 @@ async function getCsvMap(): Promise<Record<string, string>> {
 
     cachedCsvMap = { data: mapData, ts: Date.now() }
 
-    console.log("[v0] CSV Map loaded:", Object.keys(mapData).length, "dates available")
-
     return mapData
   } catch (error) {
     if (error instanceof Error) {
@@ -599,14 +593,10 @@ export async function loadTrucksForDate(date: string): Promise<Truck[] | null> {
     const csvFilePath = csvMap[date]
 
     if (!csvFilePath) {
-      console.log(`[v0] No CSV found for date: ${date}`)
       return null
     }
 
-    console.log(`[v0] Loading trucks from Blob for ${date}: ${csvFilePath}`)
-
     const trucks = await loadTrucksFromCsv(csvFilePath)
-    console.log(`[v0] Loaded ${trucks.length} trucks for date ${date}`)
     return trucks.length > 0 ? trucks : null
   } catch (error) {
     console.error(`[v0] Erro ao carregar caminhões para ${date}:`, error)

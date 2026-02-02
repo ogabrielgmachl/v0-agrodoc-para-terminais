@@ -134,7 +134,6 @@ function createColumnMap(header: string[], delimiter: string): Record<string, nu
 export async function loadShipsFromCsv(csvUrl: string, date: string): Promise<Ship[]> {
   const cached = shipCache[date]
   if (cached && Date.now() - cached.ts < SHIP_CACHE_TTL) {
-    console.log(`[v0] Using cached ships for ${date}`)
     return cached.data
   }
 
@@ -142,11 +141,9 @@ export async function loadShipsFromCsv(csvUrl: string, date: string): Promise<Sh
     const cacheBuster = `?v=${Date.now()}`
     const urlWithCacheBuster = csvUrl.includes("?") ? `${csvUrl}&v=${Date.now()}` : `${csvUrl}${cacheBuster}`
 
-    console.log(`[v0] Fetching ships from CSV: ${urlWithCacheBuster}`)
     const response = await fetch(urlWithCacheBuster, { cache: "no-store" })
 
     if (!response.ok) {
-      console.log(`[v0] CSV de navios não encontrado para ${date} (${response.status})`)
       shipCache[date] = { data: [], ts: Date.now() }
       return []
     }
@@ -154,10 +151,7 @@ export async function loadShipsFromCsv(csvUrl: string, date: string): Promise<Sh
     const text = await response.text()
     const lines = text.trim().split("\n")
 
-    console.log(`[v0] Ships CSV has ${lines.length} lines for ${date}`)
-
     if (lines.length < 2) {
-      console.log(`[v0] Ships CSV has no data rows for ${date}`)
       shipCache[date] = { data: [], ts: Date.now() }
       return []
     }
@@ -222,7 +216,6 @@ export async function loadShipsFromCsv(csvUrl: string, date: string): Promise<Sh
     }
 
     shipCache[date] = { data: ships, ts: Date.now() }
-    console.log(`[v0] Loaded ${ships.length} ships for date ${date}`)
     return ships
   } catch (error) {
     console.log(`[v0] Erro ao carregar CSV de navios para ${date}:`, error)
