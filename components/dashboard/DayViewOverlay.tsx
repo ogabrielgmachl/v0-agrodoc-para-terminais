@@ -903,7 +903,7 @@ export function DayViewOverlay({
 
           {/* Cards de metricas - 100% largura em linha */}
           {!showOnlyIncomplete && (
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {cardConfigs.map((card) => (
                 <button
                   key={card.label}
@@ -942,7 +942,7 @@ export function DayViewOverlay({
           {/* Barra de acoes - busca e filtros - Design Moderno */}
           {!showOnlyIncomplete && (
             <div
-              className={`flex items-center gap-4 p-5 rounded-2xl shadow-sm ${
+              className={`flex flex-col lg:flex-row lg:items-center gap-4 p-5 rounded-2xl shadow-sm ${
                 isDarkMode 
                   ? "bg-gradient-to-r from-slate-800/80 to-slate-800/60 border border-slate-700/50 backdrop-blur-sm" 
                   : "bg-gradient-to-r from-white to-slate-50/80 border border-slate-200/80 backdrop-blur-sm"
@@ -983,7 +983,7 @@ export function DayViewOverlay({
                 )}
               </div>
 
-              <div className={`h-8 w-px ${isDarkMode ? "bg-slate-700" : "bg-slate-200"}`} />
+              <div className={`hidden lg:block h-8 w-px ${isDarkMode ? "bg-slate-700" : "bg-slate-200"}`} />
 
               <button
                 onClick={() => {
@@ -991,7 +991,7 @@ export function DayViewOverlay({
                   setExpandedGroups(new Set())
                   setExpandedSuppliers(new Set())
                 }}
-                className={`flex items-center gap-2.5 px-5 py-3 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-200 ${
+                className={`flex w-full lg:w-auto justify-center items-center gap-2.5 px-5 py-3 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-200 ${
                   isDarkMode
                     ? "bg-gradient-to-r from-sky-500/20 to-sky-600/20 text-sky-300 hover:from-sky-500/30 hover:to-sky-600/30 border border-sky-500/20"
                     : "bg-gradient-to-r from-sky-50 to-sky-100/80 text-sky-700 hover:from-sky-100 hover:to-sky-150 border border-sky-200/50 shadow-sm"
