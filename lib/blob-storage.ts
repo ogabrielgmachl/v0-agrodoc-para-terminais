@@ -102,59 +102,131 @@ export function parseCsvDateFromFilename(filename: string): string | null {
 /**
  * Lists all truck CSV files from Vercel Blob and returns a map of dates to URLs.
  * Only checks "csv/caminhoes/" prefix.
+ * Includes retry logic with exponential backoff and timeout.
  */
 export async function listTruckCsvByDate(): Promise<CsvByDateMap> {
-  try {
-    const { blobs } = await list({
-      prefix: "csv/caminhoes/",
-      token: process.env.BLOB_READ_WRITE_TOKEN,
-    })
+  const maxRetries = 3
+  const timeoutMs = 10000 // 10 seconds timeout
 
-    const byDate: CsvByDateMap = {}
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
 
-    blobs.forEach((blob) => {
-      const filename = blob.pathname.split("/").pop()
-      if (!filename || !filename.toLowerCase().endsWith("-caminhoes.csv")) return
+      const { blobs } = await list({
+        prefix: "csv/caminhoes/",
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+      })
 
-      const date = parseCsvDateFromFilename(filename)
-      if (date) {
-        byDate[date] = blob.url
+      clearTimeout(timeoutId)
+
+      const byDate: CsvByDateMap = {}
+
+      blobs.forEach((blob) => {
+        const filename = blob.pathname.split("/").pop()
+        if (!filename || !filename.toLowerCase().endsWith("-caminhoes.csv")) return
+
+        const date = parseCsvDateFromFilename(filename)
+        if (date) {
+          byDate[date] = blob.url
+        }
+      })
+
+      return byDate
+    } catch (error) {
+      const isTimeoutError = error instanceof Error && (
+        error.message.includes("504") || 
+        error.message.includes("timeout") || 
+        error.message.includes("aborted")
+      )
+      const isLastAttempt = attempt === maxRetries - 1
+
+      console.error(
+        `[v0] Error listing truck CSV files (attempt ${attempt + 1}/${maxRetries}):`,
+        error instanceof Error ? error.message : error
+      )
+
+      if (isLastAttempt) {
+        console.error("[v0] Max retries reached for truck CSV listing")
+        return {}
       }
-    })
 
-    return byDate
-  } catch (error) {
-    console.error("[v0] Error listing truck CSV files:", error instanceof Error ? error.message : error)
-    return {}
+      if (!isTimeoutError) {
+        // Don't retry if it's not a timeout/gateway error
+        return {}
+      }
+
+      // Exponential backoff: 1s, 2s, 4s
+      const backoffMs = Math.pow(2, attempt) * 1000
+      await new Promise((resolve) => setTimeout(resolve, backoffMs))
+    }
   }
+
+  return {}
 }
 
 /**
  * Lists all ship CSV files from Vercel Blob and returns a map of dates to URLs.
  * Only checks "csv/navios/" prefix.
+ * Includes retry logic with exponential backoff and timeout.
  */
 export async function listShipCsvByDate(): Promise<CsvByDateMap> {
-  try {
-    const { blobs } = await list({
-      prefix: "csv/navios/",
-      token: process.env.BLOB_READ_WRITE_TOKEN,
-    })
+  const maxRetries = 3
+  const timeoutMs = 10000 // 10 seconds timeout
 
-    const byDate: CsvByDateMap = {}
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
 
-    blobs.forEach((blob) => {
-      const filename = blob.pathname.split("/").pop()
-      if (!filename || !filename.toLowerCase().endsWith("-navios.csv")) return
+      const { blobs } = await list({
+        prefix: "csv/navios/",
+        token: process.env.BLOB_READ_WRITE_TOKEN,
+      })
 
-      const date = parseCsvDateFromFilename(filename)
-      if (date) {
-        byDate[date] = blob.url
+      clearTimeout(timeoutId)
+
+      const byDate: CsvByDateMap = {}
+
+      blobs.forEach((blob) => {
+        const filename = blob.pathname.split("/").pop()
+        if (!filename || !filename.toLowerCase().endsWith("-navios.csv")) return
+
+        const date = parseCsvDateFromFilename(filename)
+        if (date) {
+          byDate[date] = blob.url
+        }
+      })
+
+      return byDate
+    } catch (error) {
+      const isTimeoutError = error instanceof Error && (
+        error.message.includes("504") || 
+        error.message.includes("timeout") || 
+        error.message.includes("aborted")
+      )
+      const isLastAttempt = attempt === maxRetries - 1
+
+      console.error(
+        `[v0] Error listing ship CSV files (attempt ${attempt + 1}/${maxRetries}):`,
+        error instanceof Error ? error.message : error
+      )
+
+      if (isLastAttempt) {
+        console.error("[v0] Max retries reached for ship CSV listing")
+        return {}
       }
-    })
 
-    return byDate
-  } catch (error) {
-    console.error("[v0] Error listing ship CSV files:", error instanceof Error ? error.message : error)
-    return {}
+      if (!isTimeoutError) {
+        // Don't retry if it's not a timeout/gateway error
+        return {}
+      }
+
+      // Exponential backoff: 1s, 2s, 4s
+      const backoffMs = Math.pow(2, attempt) * 1000
+      await new Promise((resolve) => setTimeout(resolve, backoffMs))
+    }
   }
+
+  return {}
 }
