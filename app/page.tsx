@@ -240,11 +240,15 @@ export default function DashboardPage() {
         const nextDayStatsByDate: Record<string, any> = { ...dayStatsByDateRef.current }
 
         if (datesToLoad.length > 0) {
+          console.log(`[v0] Loading trucks for ${datesToLoad.length} dates`)
           const allTrucksArrays = await Promise.all(datesToLoad.map((date: string) => loadTrucksForDate(date)))
+
+          console.log(`[v0] Received truck data:`, allTrucksArrays.filter((t) => t && t.length > 0).length, "dates with data")
 
           datesToLoad.forEach((date: string, index: number) => {
             const trucksForDate = allTrucksArrays[index]
             if (trucksForDate && trucksForDate.length > 0) {
+              console.log(`[v0] Processing ${trucksForDate.length} trucks for ${date}`)
               newTrucksByDate[date] = trucksForDate.map((truck: any) => ({
                 id: truck.id,
                 licensePlate: truck.licensePlate,
