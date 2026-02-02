@@ -1853,360 +1853,201 @@ export function DayViewOverlay({
             )}
           </div>
 
-          {/* Daily Averages Section - Bar Charts - Design Moderno */}
+          {/* Daily Averages Section - Simple Cards */}
           {!showOnlyIncomplete && (dailyAverages.cor.arithmetic !== null || dailyAverages.pol.arithmetic !== null || dailyAverages.umi.arithmetic !== null || dailyAverages.cin.arithmetic !== null || dailyAverages.ri.arithmetic !== null) && (
-            <div className={`rounded-2xl overflow-hidden shadow-sm ${isDarkMode ? "bg-gradient-to-b from-slate-800/60 to-slate-800/40 border border-slate-700/60" : "bg-gradient-to-b from-white to-slate-50/50 border border-slate-200/80"}`}>
-              <div className={`px-6 py-5 border-b ${isDarkMode ? 'border-slate-700/60 bg-slate-800/40' : 'border-slate-200/80 bg-gradient-to-r from-slate-50/80 to-white'}`}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${isDarkMode ? "bg-sky-500/20" : "bg-sky-100"}`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${isDarkMode ? "text-sky-400" : "text-sky-600"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className={`text-base font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
-                        Médias do Dia
-                      </h3>
-                      <p className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
-                        Indicadores de qualidade agregados
-                      </p>
-                    </div>
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-gradient-to-r from-sky-500/20 to-blue-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/20">
-                      Beta
-                    </span>
-                  </div>
-                  {/* Legend - Estilo Moderno */}
-                  <div className={`flex items-center gap-5 px-4 py-2 rounded-xl ${isDarkMode ? "bg-slate-900/50" : "bg-slate-100/80"}`}>
-                    <div className="flex items-center gap-2">
-                      <div className={`w-3 h-3 rounded-sm ${isDarkMode ? "bg-gradient-to-t from-blue-600 to-blue-400" : "bg-gradient-to-t from-blue-500 to-blue-400"}`} />
-                      <span className={`text-xs font-medium ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>Aritmética</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-sm bg-gradient-to-t from-emerald-600 to-emerald-400" />
-                      <span className={`text-xs font-medium ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>Ponderada</span>
-                    </div>
-                  </div>
+            <div className={`rounded-xl border ${isDarkMode ? "bg-slate-900/50 border-slate-700" : "bg-white border-slate-200"}`}>
+              <div className={`px-6 py-4 border-b ${isDarkMode ? 'border-slate-700' : 'border-slate-200'}`}>
+                <div className="flex items-center gap-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  <h3 className={`text-sm font-semibold ${isDarkMode ? "text-slate-200" : "text-slate-900"}`}>
+                    Médias do Dia
+                  </h3>
                 </div>
               </div>
               <div className="p-6">
-                <div className="grid grid-cols-5 gap-5">
-                  {/* COR Chart */}
+                <div className="grid grid-cols-5 gap-4">
+                  {/* COR Card */}
                   {dailyAverages.cor.arithmetic !== null && (() => {
-                    const maxHeight = 100 // pixels for bar area
-                    const maxVal = qualityLimits.cor.max
-                    const arithHeight = Math.max(4, Math.min(maxHeight, (dailyAverages.cor.arithmetic / maxVal) * maxHeight))
-                    const weightHeight = dailyAverages.cor.weighted !== null 
-                      ? Math.max(4, Math.min(maxHeight, (dailyAverages.cor.weighted / maxVal) * maxHeight))
-                      : 0
+                    const isOutOfSpec = dailyAverages.cor.arithmetic > qualityLimits.cor.max
                     return (
-                    <div className={`p-4 rounded-xl border transition-all hover:shadow-md ${isDarkMode ? "bg-gradient-to-b from-slate-700/40 to-slate-800/40 border-slate-600/40" : "bg-gradient-to-b from-white to-slate-50 border-slate-200 shadow-sm"}`}>
-                      <p className={`text-sm font-bold mb-3 text-center ${isDarkMode ? "text-slate-200" : "text-slate-800"}`}>
-                        COR
-                      </p>
-                      
-                      <div className="flex gap-2">
-                        {/* Y-axis */}
-                        <div className="flex flex-col justify-between text-[9px] text-slate-400 h-[100px] py-0.5">
-                          <span>{maxVal}</span>
-                          <span>{Math.round(maxVal * 0.66)}</span>
-                          <span>{Math.round(maxVal * 0.33)}</span>
-                          <span>0</span>
+                    <div className={`p-4 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>COR</span>
+                        {isOutOfSpec && (
+                          <span className="flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75" />
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+                          </span>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <div>
+                          <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Aritmética</div>
+                          <div className={`text-2xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
+                            {formatCor(dailyAverages.cor.arithmetic)}
+                          </div>
                         </div>
-                        
-                        {/* Chart */}
-                        <div className="flex-1 relative">
-                          <div className={`relative h-[100px] border-l-2 border-b-2 ${isDarkMode ? "border-slate-600" : "border-slate-300"}`}>
-                            {/* Red limit line */}
-                            <div className="absolute left-0 right-0 top-0 border-t-2 border-dashed border-red-500 z-0" />
-                            
-                            {/* Grid */}
-                            <div className={`absolute left-0 right-0 border-t border-dashed ${isDarkMode ? "border-slate-700" : "border-slate-200"}`} style={{ top: '33.33%' }} />
-                            <div className={`absolute left-0 right-0 border-t border-dashed ${isDarkMode ? "border-slate-700" : "border-slate-200"}`} style={{ top: '66.66%' }} />
-                            
-                            {/* Bars container */}
-                            <div className="absolute bottom-0 left-2 right-2 flex items-end justify-center gap-2 z-20">
-                              {/* Arithmetic */}
-                              <div className="flex flex-col items-center flex-1">
-                                <span className={`text-[9px] font-bold mb-1 relative z-30 ${isDarkMode ? "text-blue-300" : "text-blue-600"}`}>
-                                  {formatCor(dailyAverages.cor.arithmetic)}
-                                </span>
-                                <div 
-                                  className={`w-full rounded-t-sm transition-all duration-700 ease-out ${isDarkMode ? "bg-gradient-to-t from-blue-600 to-blue-400" : "bg-gradient-to-t from-blue-500 to-blue-400"}`}
-                                  style={{ height: `${arithHeight}px` }}
-                                />
-                              </div>
-                              {/* Weighted */}
-                              {dailyAverages.cor.weighted !== null && (
-                                <div className="flex flex-col items-center flex-1">
-                                  <span className={`text-[9px] font-bold mb-1 relative z-30 ${isDarkMode ? "text-emerald-300" : "text-emerald-600"}`}>
-                                    {formatCor(dailyAverages.cor.weighted)}
-                                  </span>
-                                  <div 
-                                    className="w-full rounded-t-sm transition-all duration-700 ease-out bg-gradient-to-t from-emerald-600 to-emerald-400"
-                                    style={{ height: `${weightHeight}px` }}
-                                  />
-                                </div>
-                              )}
+                        {dailyAverages.cor.weighted !== null && (
+                          <div>
+                            <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Ponderada</div>
+                            <div className={`text-lg font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
+                              {formatCor(dailyAverages.cor.weighted)}
                             </div>
                           </div>
-                          
-                          {/* X labels */}
-                          <div className="flex justify-center gap-4 mt-2 text-[9px] font-medium text-slate-400">
-                            <span>Arit.</span>
-                            <span>Pond.</span>
-                          </div>
-                        </div>
+                        )}
+                      </div>
+                      <div className={`mt-3 pt-3 border-t text-xs ${isDarkMode ? "border-slate-700 text-slate-400" : "border-slate-200 text-slate-500"}`}>
+                        Limite: {qualityLimits.cor.max}
                       </div>
                     </div>
                     )
                   })()}
                   
-                  {/* POL Chart */}
+                  {/* POL Card */}
                   {dailyAverages.pol.arithmetic !== null && (() => {
-                    const maxHeight = 100
-                    const minVal = qualityLimits.pol.min
-                    const maxVal = qualityLimits.pol.max
-                    const range = maxVal - minVal
-                    const arithHeight = Math.max(4, Math.min(maxHeight, ((dailyAverages.pol.arithmetic - minVal) / range) * maxHeight))
-                    const weightHeight = dailyAverages.pol.weighted !== null 
-                      ? Math.max(4, Math.min(maxHeight, ((dailyAverages.pol.weighted - minVal) / range) * maxHeight))
-                      : 0
+                    const isOutOfSpec = dailyAverages.pol.arithmetic < qualityLimits.pol.min || dailyAverages.pol.arithmetic > qualityLimits.pol.max
                     return (
-                    <div className={`p-4 rounded-xl border transition-all hover:shadow-md ${isDarkMode ? "bg-gradient-to-b from-slate-700/40 to-slate-800/40 border-slate-600/40" : "bg-gradient-to-b from-white to-slate-50 border-slate-200 shadow-sm"}`}>
-                      <p className={`text-sm font-bold mb-3 text-center ${isDarkMode ? "text-slate-200" : "text-slate-800"}`}>
-                        POL
-                      </p>
-                      
-                      <div className="flex gap-2">
-                        <div className="flex flex-col justify-between text-[9px] text-slate-400 h-[100px] py-0.5">
-                          <span>{maxVal}</span>
-                          <span>99.4</span>
-                          <span>99.1</span>
-                          <span>{minVal}</span>
+                    <div className={`p-4 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>POL</span>
+                        {isOutOfSpec && (
+                          <span className="flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75" />
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+                          </span>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <div>
+                          <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Aritmética</div>
+                          <div className={`text-2xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
+                            {formatPol(dailyAverages.pol.arithmetic)}
+                          </div>
                         </div>
-                        
-                        <div className="flex-1 relative">
-                          <div className={`relative h-[100px] border-l-2 border-b-2 ${isDarkMode ? "border-slate-600" : "border-slate-300"}`}>
-                            <div className="absolute left-0 right-0 top-0 border-t-2 border-dashed border-red-500 z-0" />
-                            <div className={`absolute left-0 right-0 border-t border-dashed ${isDarkMode ? "border-slate-700" : "border-slate-200"}`} style={{ top: '33.33%' }} />
-                            <div className={`absolute left-0 right-0 border-t border-dashed ${isDarkMode ? "border-slate-700" : "border-slate-200"}`} style={{ top: '66.66%' }} />
-                            
-                            <div className="absolute bottom-0 left-2 right-2 flex items-end justify-center gap-2 z-20">
-                              <div className="flex flex-col items-center flex-1">
-                                <span className={`text-[9px] font-bold mb-1 relative z-30 ${isDarkMode ? "text-blue-300" : "text-blue-600"}`}>
-                                  {formatPol(dailyAverages.pol.arithmetic)}
-                                </span>
-                                <div 
-                                  className={`w-full rounded-t-sm transition-all duration-700 ease-out ${isDarkMode ? "bg-gradient-to-t from-blue-600 to-blue-400" : "bg-gradient-to-t from-blue-500 to-blue-400"}`}
-                                  style={{ height: `${arithHeight}px` }}
-                                />
-                              </div>
-                              {dailyAverages.pol.weighted !== null && (
-                                <div className="flex flex-col items-center flex-1">
-                                  <span className={`text-[9px] font-bold mb-1 relative z-30 ${isDarkMode ? "text-emerald-300" : "text-emerald-600"}`}>
-                                    {formatPol(dailyAverages.pol.weighted)}
-                                  </span>
-                                  <div 
-                                    className="w-full rounded-t-sm transition-all duration-700 ease-out bg-gradient-to-t from-emerald-600 to-emerald-400"
-                                    style={{ height: `${weightHeight}px` }}
-                                  />
-                                </div>
-                              )}
+                        {dailyAverages.pol.weighted !== null && (
+                          <div>
+                            <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Ponderada</div>
+                            <div className={`text-lg font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
+                              {formatPol(dailyAverages.pol.weighted)}
                             </div>
                           </div>
-                          
-                          <div className="flex justify-center gap-4 mt-2 text-[9px] font-medium text-slate-400">
-                            <span>Arit.</span>
-                            <span>Pond.</span>
-                          </div>
-                        </div>
+                        )}
+                      </div>
+                      <div className={`mt-3 pt-3 border-t text-xs ${isDarkMode ? "border-slate-700 text-slate-400" : "border-slate-200 text-slate-500"}`}>
+                        Faixa: {qualityLimits.pol.min} - {qualityLimits.pol.max}
                       </div>
                     </div>
                     )
                   })()}
                   
-                  {/* UMI Chart */}
+                  {/* UMI Card */}
                   {dailyAverages.umi.arithmetic !== null && (() => {
-                    const maxHeight = 100
-                    const maxVal = qualityLimits.um.max
-                    const arithHeight = Math.max(4, Math.min(maxHeight, (dailyAverages.umi.arithmetic / maxVal) * maxHeight))
-                    const weightHeight = dailyAverages.umi.weighted !== null 
-                      ? Math.max(4, Math.min(maxHeight, (dailyAverages.umi.weighted / maxVal) * maxHeight))
-                      : 0
+                    const isOutOfSpec = dailyAverages.umi.arithmetic > qualityLimits.um.max
                     return (
-                    <div className={`p-4 rounded-xl border transition-all hover:shadow-md ${isDarkMode ? "bg-gradient-to-b from-slate-700/40 to-slate-800/40 border-slate-600/40" : "bg-gradient-to-b from-white to-slate-50 border-slate-200 shadow-sm"}`}>
-                      <p className={`text-sm font-bold mb-3 text-center ${isDarkMode ? "text-slate-200" : "text-slate-800"}`}>
-                        UMI
-                      </p>
-                      
-                      <div className="flex gap-2">
-                        <div className="flex flex-col justify-between text-[9px] text-slate-400 h-[100px] py-0.5">
-                          <span>{maxVal.toFixed(2)}</span>
-                          <span>{(maxVal * 0.66).toFixed(2)}</span>
-                          <span>{(maxVal * 0.33).toFixed(2)}</span>
-                          <span>0</span>
+                    <div className={`p-4 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>UMI</span>
+                        {isOutOfSpec && (
+                          <span className="flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75" />
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+                          </span>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <div>
+                          <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Aritmética</div>
+                          <div className={`text-2xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
+                            {formatUmi(dailyAverages.umi.arithmetic)}
+                          </div>
                         </div>
-                        
-                        <div className="flex-1 relative">
-                          <div className={`relative h-[100px] border-l-2 border-b-2 ${isDarkMode ? "border-slate-600" : "border-slate-300"}`}>
-                            <div className="absolute left-0 right-0 top-0 border-t-2 border-dashed border-red-500 z-0" />
-                            <div className={`absolute left-0 right-0 border-t border-dashed ${isDarkMode ? "border-slate-700" : "border-slate-200"}`} style={{ top: '33.33%' }} />
-                            <div className={`absolute left-0 right-0 border-t border-dashed ${isDarkMode ? "border-slate-700" : "border-slate-200"}`} style={{ top: '66.66%' }} />
-                            
-                            <div className="absolute bottom-0 left-2 right-2 flex items-end justify-center gap-2 z-20">
-                              <div className="flex flex-col items-center flex-1">
-                                <span className={`text-[9px] font-bold mb-1 relative z-30 ${isDarkMode ? "text-blue-300" : "text-blue-600"}`}>
-                                  {formatUmi(dailyAverages.umi.arithmetic)}
-                                </span>
-                                <div 
-                                  className={`w-full rounded-t-sm transition-all duration-700 ease-out ${isDarkMode ? "bg-gradient-to-t from-blue-600 to-blue-400" : "bg-gradient-to-t from-blue-500 to-blue-400"}`}
-                                  style={{ height: `${arithHeight}px` }}
-                                />
-                              </div>
-                              {dailyAverages.umi.weighted !== null && (
-                                <div className="flex flex-col items-center flex-1">
-                                  <span className={`text-[9px] font-bold mb-1 relative z-30 ${isDarkMode ? "text-emerald-300" : "text-emerald-600"}`}>
-                                    {formatUmi(dailyAverages.umi.weighted)}
-                                  </span>
-                                  <div 
-                                    className="w-full rounded-t-sm transition-all duration-700 ease-out bg-gradient-to-t from-emerald-600 to-emerald-400"
-                                    style={{ height: `${weightHeight}px` }}
-                                  />
-                                </div>
-                              )}
+                        {dailyAverages.umi.weighted !== null && (
+                          <div>
+                            <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Ponderada</div>
+                            <div className={`text-lg font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
+                              {formatUmi(dailyAverages.umi.weighted)}
                             </div>
                           </div>
-                          
-                          <div className="flex justify-center gap-4 mt-2 text-[9px] font-medium text-slate-400">
-                            <span>Arit.</span>
-                            <span>Pond.</span>
-                          </div>
-                        </div>
+                        )}
+                      </div>
+                      <div className={`mt-3 pt-3 border-t text-xs ${isDarkMode ? "border-slate-700 text-slate-400" : "border-slate-200 text-slate-500"}`}>
+                        Limite: {qualityLimits.um.max}
                       </div>
                     </div>
                     )
                   })()}
                   
-                  {/* CIN Chart */}
+                  {/* CIN Card */}
                   {dailyAverages.cin.arithmetic !== null && (() => {
-                    const maxHeight = 100
-                    const maxVal = qualityLimits.cin.max
-                    const arithHeight = Math.max(4, Math.min(maxHeight, (dailyAverages.cin.arithmetic / maxVal) * maxHeight))
-                    const weightHeight = dailyAverages.cin.weighted !== null 
-                      ? Math.max(4, Math.min(maxHeight, (dailyAverages.cin.weighted / maxVal) * maxHeight))
-                      : 0
+                    const isOutOfSpec = dailyAverages.cin.arithmetic > qualityLimits.cin.max
                     return (
-                    <div className={`p-4 rounded-xl border transition-all hover:shadow-md ${isDarkMode ? "bg-gradient-to-b from-slate-700/40 to-slate-800/40 border-slate-600/40" : "bg-gradient-to-b from-white to-slate-50 border-slate-200 shadow-sm"}`}>
-                      <p className={`text-sm font-bold mb-3 text-center ${isDarkMode ? "text-slate-200" : "text-slate-800"}`}>
-                        CIN
-                      </p>
-                      
-                      <div className="flex gap-2">
-                        <div className="flex flex-col justify-between text-[9px] text-slate-400 h-[100px] py-0.5">
-                          <span>{maxVal.toFixed(2)}</span>
-                          <span>{(maxVal * 0.66).toFixed(2)}</span>
-                          <span>{(maxVal * 0.33).toFixed(2)}</span>
-                          <span>0</span>
+                    <div className={`p-4 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>CIN</span>
+                        {isOutOfSpec && (
+                          <span className="flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75" />
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+                          </span>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <div>
+                          <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Aritmética</div>
+                          <div className={`text-2xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
+                            {formatCin(dailyAverages.cin.arithmetic)}
+                          </div>
                         </div>
-                        
-                        <div className="flex-1 relative">
-                          <div className={`relative h-[100px] border-l-2 border-b-2 ${isDarkMode ? "border-slate-600" : "border-slate-300"}`}>
-                            <div className="absolute left-0 right-0 top-0 border-t-2 border-dashed border-red-500 z-0" />
-                            <div className={`absolute left-0 right-0 border-t border-dashed ${isDarkMode ? "border-slate-700" : "border-slate-200"}`} style={{ top: '33.33%' }} />
-                            <div className={`absolute left-0 right-0 border-t border-dashed ${isDarkMode ? "border-slate-700" : "border-slate-200"}`} style={{ top: '66.66%' }} />
-                            
-                            <div className="absolute bottom-0 left-2 right-2 flex items-end justify-center gap-2 z-20">
-                              <div className="flex flex-col items-center flex-1">
-                                <span className={`text-[9px] font-bold mb-1 relative z-30 ${isDarkMode ? "text-blue-300" : "text-blue-600"}`}>
-                                  {formatCin(dailyAverages.cin.arithmetic)}
-                                </span>
-                                <div 
-                                  className={`w-full rounded-t-sm transition-all duration-700 ease-out ${isDarkMode ? "bg-gradient-to-t from-blue-600 to-blue-400" : "bg-gradient-to-t from-blue-500 to-blue-400"}`}
-                                  style={{ height: `${arithHeight}px` }}
-                                />
-                              </div>
-                              {dailyAverages.cin.weighted !== null && (
-                                <div className="flex flex-col items-center flex-1">
-                                  <span className={`text-[9px] font-bold mb-1 relative z-30 ${isDarkMode ? "text-emerald-300" : "text-emerald-600"}`}>
-                                    {formatCin(dailyAverages.cin.weighted)}
-                                  </span>
-                                  <div 
-                                    className="w-full rounded-t-sm transition-all duration-700 ease-out bg-gradient-to-t from-emerald-600 to-emerald-400"
-                                    style={{ height: `${weightHeight}px` }}
-                                  />
-                                </div>
-                              )}
+                        {dailyAverages.cin.weighted !== null && (
+                          <div>
+                            <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Ponderada</div>
+                            <div className={`text-lg font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
+                              {formatCin(dailyAverages.cin.weighted)}
                             </div>
                           </div>
-                          
-                          <div className="flex justify-center gap-4 mt-2 text-[9px] font-medium text-slate-400">
-                            <span>Arit.</span>
-                            <span>Pond.</span>
-                          </div>
-                        </div>
+                        )}
+                      </div>
+                      <div className={`mt-3 pt-3 border-t text-xs ${isDarkMode ? "border-slate-700 text-slate-400" : "border-slate-200 text-slate-500"}`}>
+                        Limite: {qualityLimits.cin.max}
                       </div>
                     </div>
                     )
                   })()}
                   
-                  {/* RI Chart */}
+                  {/* RI Card */}
                   {dailyAverages.ri.arithmetic !== null && (() => {
-                    const maxHeight = 100
-                    const maxVal = qualityLimits.ri.max
-                    const arithHeight = Math.max(4, Math.min(maxHeight, (dailyAverages.ri.arithmetic / maxVal) * maxHeight))
-                    const weightHeight = dailyAverages.ri.weighted !== null 
-                      ? Math.max(4, Math.min(maxHeight, (dailyAverages.ri.weighted / maxVal) * maxHeight))
-                      : 0
+                    const isOutOfSpec = dailyAverages.ri.arithmetic > qualityLimits.ri.max
                     return (
-                    <div className={`p-4 rounded-xl border transition-all hover:shadow-md ${isDarkMode ? "bg-gradient-to-b from-slate-700/40 to-slate-800/40 border-slate-600/40" : "bg-gradient-to-b from-white to-slate-50 border-slate-200 shadow-sm"}`}>
-                      <p className={`text-sm font-bold mb-3 text-center ${isDarkMode ? "text-slate-200" : "text-slate-800"}`}>
-                        RI
-                      </p>
-                      
-                      <div className="flex gap-2">
-                        <div className="flex flex-col justify-between text-[9px] text-slate-400 h-[100px] py-0.5">
-                          <span>{maxVal}</span>
-                          <span>{Math.round(maxVal * 0.66)}</span>
-                          <span>{Math.round(maxVal * 0.33)}</span>
-                          <span>0</span>
+                    <div className={`p-4 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>RI</span>
+                        {isOutOfSpec && (
+                          <span className="flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75" />
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+                          </span>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <div>
+                          <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Aritmética</div>
+                          <div className={`text-2xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
+                            {formatRi(dailyAverages.ri.arithmetic)}
+                          </div>
                         </div>
-                        
-                        <div className="flex-1 relative">
-                          <div className={`relative h-[100px] border-l-2 border-b-2 ${isDarkMode ? "border-slate-600" : "border-slate-300"}`}>
-                            <div className="absolute left-0 right-0 top-0 border-t-2 border-dashed border-red-500 z-0" />
-                            <div className={`absolute left-0 right-0 border-t border-dashed ${isDarkMode ? "border-slate-700" : "border-slate-200"}`} style={{ top: '33.33%' }} />
-                            <div className={`absolute left-0 right-0 border-t border-dashed ${isDarkMode ? "border-slate-700" : "border-slate-200"}`} style={{ top: '66.66%' }} />
-                            
-                            <div className="absolute bottom-0 left-2 right-2 flex items-end justify-center gap-2 z-20">
-                              <div className="flex flex-col items-center flex-1">
-                                <span className={`text-[9px] font-bold mb-1 relative z-30 ${isDarkMode ? "text-blue-300" : "text-blue-600"}`}>
-                                  {formatRi(dailyAverages.ri.arithmetic)}
-                                </span>
-                                <div 
-                                  className={`w-full rounded-t-sm transition-all duration-700 ease-out ${isDarkMode ? "bg-gradient-to-t from-blue-600 to-blue-400" : "bg-gradient-to-t from-blue-500 to-blue-400"}`}
-                                  style={{ height: `${arithHeight}px` }}
-                                />
-                              </div>
-                              {dailyAverages.ri.weighted !== null && (
-                                <div className="flex flex-col items-center flex-1">
-                                  <span className={`text-[9px] font-bold mb-1 relative z-30 ${isDarkMode ? "text-emerald-300" : "text-emerald-600"}`}>
-                                    {formatRi(dailyAverages.ri.weighted)}
-                                  </span>
-                                  <div 
-                                    className="w-full rounded-t-sm transition-all duration-700 ease-out bg-gradient-to-t from-emerald-600 to-emerald-400"
-                                    style={{ height: `${weightHeight}px` }}
-                                  />
-                                </div>
-                              )}
+                        {dailyAverages.ri.weighted !== null && (
+                          <div>
+                            <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Ponderada</div>
+                            <div className={`text-lg font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
+                              {formatRi(dailyAverages.ri.weighted)}
                             </div>
                           </div>
-                          
-                          <div className="flex justify-center gap-4 mt-2 text-[9px] font-medium text-slate-400">
-                            <span>Arit.</span>
-                            <span>Pond.</span>
-                          </div>
-                        </div>
+                        )}
+                      </div>
+                      <div className={`mt-3 pt-3 border-t text-xs ${isDarkMode ? "border-slate-700 text-slate-400" : "border-slate-200 text-slate-500"}`}>
+                        Limite: {qualityLimits.ri.max}
                       </div>
                     </div>
                     )
