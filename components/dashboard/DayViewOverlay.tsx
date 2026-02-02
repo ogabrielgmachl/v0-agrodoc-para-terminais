@@ -1849,10 +1849,12 @@ export function DayViewOverlay({
                         )}
                       </div>
                     )
-                  })()}
+                  })
+                })()}
               </div>
             )}
           </div>
+        </div>
         </div>
 
         {/* Right Column - Sidebar (Quality Snapshot + Alerts) */}
@@ -2168,12 +2170,11 @@ export function DayViewOverlay({
           </div>
         </div>
       </div>
-      </div>
 
       {/* History Popup */}
       {historyPopup && (
         <>
-          {/* Backdrop */}\
+          {/* Backdrop */}
           <div className="fixed inset-0 z-[110]" onClick={() => setHistoryPopup(null)} />
 
           {/* Popup */}
