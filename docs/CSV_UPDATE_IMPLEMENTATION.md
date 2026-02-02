@@ -84,7 +84,7 @@ Um caminhão é identificado como **BOLA 7** quando:
 - Adicionada flag `isBola7` ao objeto Truck
 
 **Novos Campos no Type Truck**:
-```typescript
+\`\`\`typescript
 // Datas das análises finais
 corData: string | null
 polData: string | null
@@ -119,7 +119,7 @@ linkBoletimB7: string | null
 
 // Flag
 isBola7: boolean
-```
+\`\`\`
 
 ### 2. `/components/dashboard/DayViewOverlay.tsx`
 **Mudanças**:
@@ -141,17 +141,17 @@ isBola7: boolean
 ## Lógica de Exibição
 
 ### Regras de Exibição de Analistas
-```javascript
+\`\`\`javascript
 // NÃO exibir "robo_lab" no sistema
 if (analista === "robo_lab") {
   // Não mostrar
 } else if (analista !== null) {
   // Mostrar nome do agente
 }
-```
+\`\`\`
 
 ### Regras de Exibição de Documentos
-```javascript
+\`\`\`javascript
 // Botão de Doublecheck (Roxo + Beaker)
 if (linkBoletimDb !== null && linkBoletimDb !== "") {
   // Exibir botão
@@ -166,7 +166,7 @@ if (linkBoletimB7 !== null && linkBoletimB7 !== "") {
 if (!linkBoletimDb && !linkBoletimB7) {
   // Exibir "-"
 }
-```
+\`\`\`
 
 ---
 
@@ -181,7 +181,7 @@ O sistema mantém **total compatibilidade** com CSVs antigos:
 
 ## Formato Esperado do CSV
 
-```
+\`\`\`
 id,placa,nota_fiscal,cliente,fornecedor,autorizacao,data_autorizacao,peso,
 cor,cor_data,cor_anterior,cor_data_nir,cor_analista,cor_analista_anterior,
 pol,pol_data,pol_anterior,pol_data_nir,pol_analista,pol_analista_anterior,
@@ -189,10 +189,10 @@ umi,umi_data,umi_anterior,umi_data_nir,umi_analista,umi_analista_anterior,
 cin,cin_data,cin_anterior,cin_data_nir,cin_analista,cin_analista_anterior,
 ri,ri_data,ri_anterior,ri_data_nir,ri_analista,ri_analista_anterior,
 link_boletim_db,link_boletim_b7
-```
+\`\`\`
 
 ### Exemplo de Linha (Aprovado pelo NIR):
-```
+\`\`\`
 1,ABC1234,12345,SAO MARTINHO,FORNECEDOR A,,,25.5,
 1100,22/01/2026 10:30:00,,,22/01/2026 10:30:00,robo_lab,,
 99.2,22/01/2026 10:30:00,,,22/01/2026 10:30:00,robo_lab,,
@@ -200,10 +200,10 @@ link_boletim_db,link_boletim_b7
 0.08,22/01/2026 10:30:00,,,22/01/2026 10:30:00,robo_lab,,
 350,22/01/2026 10:30:00,,,22/01/2026 10:30:00,robo_lab,,
 ,
-```
+\`\`\`
 
 ### Exemplo de Linha (Doublecheck):
-```
+\`\`\`
 2,XYZ5678,54321,CLIENTE B,FORNECEDOR B,APROVADO,22/01/2026 15:45:00,30.2,
 1200,22/01/2026 15:45:00,1300,22/01/2026 10:00:00,João Silva,robo_lab,
 99.4,22/01/2026 15:45:00,98.8,22/01/2026 10:00:00,João Silva,robo_lab,
@@ -211,10 +211,10 @@ link_boletim_db,link_boletim_b7
 0.12,22/01/2026 15:45:00,0.15,22/01/2026 10:00:00,João Silva,robo_lab,
 420,22/01/2026 15:45:00,480,22/01/2026 10:00:00,Pedro Costa,robo_lab,
 https://exemplo.com/boletim-db-123,
-```
+\`\`\`
 
 ### Exemplo de Linha (Bola 7):
-```
+\`\`\`
 3,DEF9012,67890,CLIENTE C,FORNECEDOR C,,,28.8,
 1150,22/01/2026 14:20:00,,,22/01/2026 14:20:00,Carlos Lima,,
 99.3,22/01/2026 14:20:00,,,22/01/2026 14:20:00,Carlos Lima,,
@@ -222,7 +222,7 @@ https://exemplo.com/boletim-db-123,
 0.10,22/01/2026 14:20:00,,,22/01/2026 14:20:00,Carlos Lima,,
 380,22/01/2026 14:20:00,,,22/01/2026 14:20:00,Carlos Lima,,
 ,https://exemplo.com/bola7-456
-```
+\`\`\`
 
 ---
 

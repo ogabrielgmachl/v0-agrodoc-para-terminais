@@ -39,12 +39,12 @@ Isso garante que:
 ## Sugestões de Melhorias Futuras
 
 ### 1. Avatar/Foto de Perfil
-```typescript
+\`\`\`typescript
 // Adicionar upload de foto
 - Upload para Supabase Storage
 - Salvar URL em `avatar_url`
 - Exibir preview antes de confirmar
-```
+\`\`\`
 
 ### 2. Informações Adicionais
 - Adicionar campos: `phone`, `company`, `role`, `bio`
@@ -52,12 +52,12 @@ Isso garante que:
 - Validação de telefone e dados
 
 ### 3. Histórico de Atividades
-```typescript
+\`\`\`typescript
 // Criar tabela `activity_logs`
 - Rastrear mudanças de dados
 - Registrar logins
 - Exportar relatório de atividades
-```
+\`\`\`
 
 ### 4. Autenticação de Dois Fatores (2FA)
 - Integrar com Google Authenticator
@@ -70,14 +70,14 @@ Isso garante que:
 - Gerenciar aplicativos com acesso
 
 ### 6. Temas e Preferências
-```typescript
+\`\`\`typescript
 // Melhorar seção de Preferências
 - Notificações (email, SMS, push)
 - Tema (claro/escuro) - salvar preferência
 - Idioma
 - Fuso horário
 - Formato de data/hora
-```
+\`\`\`
 
 ### 7. Dados de Conta
 - Data de criação
@@ -92,7 +92,7 @@ Isso garante que:
 
 ## Estrutura de Pastas
 
-```
+\`\`\`
 /app
 ├── settings/
 │   └── account/
@@ -108,7 +108,7 @@ Isso garante que:
 
 /docs
 └── ACCOUNT_SETTINGS_GUIDE.md # Este arquivo
-```
+\`\`\`
 
 ## Troubleshooting
 
