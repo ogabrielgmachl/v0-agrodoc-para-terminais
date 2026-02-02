@@ -1873,14 +1873,14 @@ export function DayViewOverlay({
                   </div>
                 </div>
                 <div className="p-4">
-                  <div className="grid grid-cols-5 gap-4">
+                  <div className="grid grid-cols-5 gap-3">
                   {/* COR Card */}
                   {dailyAverages.cor.arithmetic !== null && (() => {
                     const isOutOfSpec = dailyAverages.cor.arithmetic > qualityLimits.cor.max
                     return (
-                    <div className={`p-4 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>COR</span>
+                    <div className={`p-3 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className={`text-xs font-bold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>COR</span>
                         {isOutOfSpec && (
                           <span className="flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75" />
@@ -1888,23 +1888,23 @@ export function DayViewOverlay({
                           </span>
                         )}
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         <div>
-                          <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Aritmética</div>
-                          <div className={`text-2xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
+                          <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Aritm.</div>
+                          <div className={`text-xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
                             {formatCor(dailyAverages.cor.arithmetic)}
                           </div>
                         </div>
                         {dailyAverages.cor.weighted !== null && (
                           <div>
-                            <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Ponderada</div>
-                            <div className={`text-lg font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
+                            <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Pond.</div>
+                            <div className={`text-base font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
                               {formatCor(dailyAverages.cor.weighted)}
                             </div>
                           </div>
                         )}
                       </div>
-                      <div className={`mt-3 pt-3 border-t text-xs ${isDarkMode ? "border-slate-700 text-slate-400" : "border-slate-200 text-slate-500"}`}>
+                      <div className={`mt-2 pt-2 border-t text-[10px] ${isDarkMode ? "border-slate-700 text-slate-500" : "border-slate-200 text-slate-400"}`}>
                         Limite: {qualityLimits.cor.max}
                       </div>
                     </div>
@@ -1915,9 +1915,9 @@ export function DayViewOverlay({
                   {dailyAverages.pol.arithmetic !== null && (() => {
                     const isOutOfSpec = dailyAverages.pol.arithmetic < qualityLimits.pol.min || dailyAverages.pol.arithmetic > qualityLimits.pol.max
                     return (
-                    <div className={`p-4 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>POL</span>
+                    <div className={`p-3 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className={`text-xs font-bold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>POL</span>
                         {isOutOfSpec && (
                           <span className="flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75" />
@@ -1925,24 +1925,24 @@ export function DayViewOverlay({
                           </span>
                         )}
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         <div>
-                          <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Aritmética</div>
-                          <div className={`text-2xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
+                          <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Aritm.</div>
+                          <div className={`text-xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
                             {formatPol(dailyAverages.pol.arithmetic)}
                           </div>
                         </div>
                         {dailyAverages.pol.weighted !== null && (
                           <div>
-                            <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Ponderada</div>
-                            <div className={`text-lg font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
+                            <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Pond.</div>
+                            <div className={`text-base font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
                               {formatPol(dailyAverages.pol.weighted)}
                             </div>
                           </div>
                         )}
                       </div>
-                      <div className={`mt-3 pt-3 border-t text-xs ${isDarkMode ? "border-slate-700 text-slate-400" : "border-slate-200 text-slate-500"}`}>
-                        Faixa: {qualityLimits.pol.min} - {qualityLimits.pol.max}
+                      <div className={`mt-2 pt-2 border-t text-[10px] ${isDarkMode ? "border-slate-700 text-slate-500" : "border-slate-200 text-slate-400"}`}>
+                        {qualityLimits.pol.min}-{qualityLimits.pol.max}
                       </div>
                     </div>
                     )
@@ -1952,9 +1952,9 @@ export function DayViewOverlay({
                   {dailyAverages.umi.arithmetic !== null && (() => {
                     const isOutOfSpec = dailyAverages.umi.arithmetic > qualityLimits.um.max
                     return (
-                    <div className={`p-4 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>UMI</span>
+                    <div className={`p-3 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className={`text-xs font-bold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>UMI</span>
                         {isOutOfSpec && (
                           <span className="flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75" />
@@ -1962,24 +1962,24 @@ export function DayViewOverlay({
                           </span>
                         )}
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         <div>
-                          <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Aritmética</div>
-                          <div className={`text-2xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
+                          <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Aritm.</div>
+                          <div className={`text-xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
                             {formatUmi(dailyAverages.umi.arithmetic)}
                           </div>
                         </div>
                         {dailyAverages.umi.weighted !== null && (
                           <div>
-                            <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Ponderada</div>
-                            <div className={`text-lg font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
+                            <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Pond.</div>
+                            <div className={`text-base font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
                               {formatUmi(dailyAverages.umi.weighted)}
                             </div>
                           </div>
                         )}
                       </div>
-                      <div className={`mt-3 pt-3 border-t text-xs ${isDarkMode ? "border-slate-700 text-slate-400" : "border-slate-200 text-slate-500"}`}>
-                        Limite: {qualityLimits.um.max}
+                      <div className={`mt-2 pt-2 border-t text-[10px] ${isDarkMode ? "border-slate-700 text-slate-500" : "border-slate-200 text-slate-400"}`}>
+                        Max: {qualityLimits.um.max}
                       </div>
                     </div>
                     )
@@ -1989,9 +1989,9 @@ export function DayViewOverlay({
                   {dailyAverages.cin.arithmetic !== null && (() => {
                     const isOutOfSpec = dailyAverages.cin.arithmetic > qualityLimits.cin.max
                     return (
-                    <div className={`p-4 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>CIN</span>
+                    <div className={`p-3 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className={`text-xs font-bold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>CIN</span>
                         {isOutOfSpec && (
                           <span className="flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75" />
@@ -1999,24 +1999,24 @@ export function DayViewOverlay({
                           </span>
                         )}
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         <div>
-                          <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Aritmética</div>
-                          <div className={`text-2xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
+                          <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Aritm.</div>
+                          <div className={`text-xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
                             {formatCin(dailyAverages.cin.arithmetic)}
                           </div>
                         </div>
                         {dailyAverages.cin.weighted !== null && (
                           <div>
-                            <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Ponderada</div>
-                            <div className={`text-lg font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
+                            <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Pond.</div>
+                            <div className={`text-base font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
                               {formatCin(dailyAverages.cin.weighted)}
                             </div>
                           </div>
                         )}
                       </div>
-                      <div className={`mt-3 pt-3 border-t text-xs ${isDarkMode ? "border-slate-700 text-slate-400" : "border-slate-200 text-slate-500"}`}>
-                        Limite: {qualityLimits.cin.max}
+                      <div className={`mt-2 pt-2 border-t text-[10px] ${isDarkMode ? "border-slate-700 text-slate-500" : "border-slate-200 text-slate-400"}`}>
+                        Max: {qualityLimits.cin.max}
                       </div>
                     </div>
                     )
@@ -2026,9 +2026,9 @@ export function DayViewOverlay({
                   {dailyAverages.ri.arithmetic !== null && (() => {
                     const isOutOfSpec = dailyAverages.ri.arithmetic > qualityLimits.ri.max
                     return (
-                    <div className={`p-4 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className={`text-xs font-semibold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>RI</span>
+                    <div className={`p-3 rounded-lg border ${isDarkMode ? "bg-slate-800/50 border-slate-700" : "bg-slate-50 border-slate-200"}`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className={`text-xs font-bold ${isDarkMode ? "text-slate-300" : "text-slate-700"}`}>RI</span>
                         {isOutOfSpec && (
                           <span className="flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75" />
@@ -2036,24 +2036,24 @@ export function DayViewOverlay({
                           </span>
                         )}
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         <div>
-                          <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Aritmética</div>
-                          <div className={`text-2xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
+                          <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Aritm.</div>
+                          <div className={`text-xl font-bold ${isOutOfSpec ? "text-red-500" : isDarkMode ? "text-slate-100" : "text-slate-900"}`}>
                             {formatRi(dailyAverages.ri.arithmetic)}
                           </div>
                         </div>
                         {dailyAverages.ri.weighted !== null && (
                           <div>
-                            <div className={`text-xs ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Ponderada</div>
-                            <div className={`text-lg font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
+                            <div className={`text-[10px] ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Pond.</div>
+                            <div className={`text-base font-semibold ${isDarkMode ? "text-emerald-400" : "text-emerald-600"}`}>
                               {formatRi(dailyAverages.ri.weighted)}
                             </div>
                           </div>
                         )}
                       </div>
-                      <div className={`mt-3 pt-3 border-t text-xs ${isDarkMode ? "border-slate-700 text-slate-400" : "border-slate-200 text-slate-500"}`}>
-                        Limite: {qualityLimits.ri.max}
+                      <div className={`mt-2 pt-2 border-t text-[10px] ${isDarkMode ? "border-slate-700 text-slate-500" : "border-slate-200 text-slate-400"}`}>
+                        Max: {qualityLimits.ri.max}
                       </div>
                     </div>
                     )
