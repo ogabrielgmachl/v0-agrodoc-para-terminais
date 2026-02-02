@@ -104,24 +104,35 @@ export function parseCsvDateFromFilename(filename: string): string | null {
  * Only checks "csv/caminhoes/" prefix.
  */
 export async function listTruckCsvByDate(): Promise<CsvByDateMap> {
-  const { blobs } = await list({
-    prefix: "csv/caminhoes/",
-    token: process.env.BLOB_READ_WRITE_TOKEN,
-  })
+  console.log("[v0] listTruckCsvByDate called - token exists:", !!process.env.BLOB_READ_WRITE_TOKEN)
+  
+  try {
+    const { blobs } = await list({
+      prefix: "csv/caminhoes/",
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    })
 
-  const byDate: CsvByDateMap = {}
+    console.log("[v0] Blobs found:", blobs.length)
 
-  blobs.forEach((blob) => {
-    const filename = blob.pathname.split("/").pop()
-    if (!filename || !filename.toLowerCase().endsWith("-caminhoes.csv")) return
+    const byDate: CsvByDateMap = {}
 
-    const date = parseCsvDateFromFilename(filename)
-    if (date) {
-      byDate[date] = blob.url
-    }
-  })
+    blobs.forEach((blob) => {
+      const filename = blob.pathname.split("/").pop()
+      if (!filename || !filename.toLowerCase().endsWith("-caminhoes.csv")) return
 
-  return byDate
+      const date = parseCsvDateFromFilename(filename)
+      if (date) {
+        byDate[date] = blob.url
+        console.log(`[v0] Found truck CSV for date ${date}: ${filename}`)
+      }
+    })
+
+    console.log("[v0] Total truck dates found:", Object.keys(byDate).length)
+    return byDate
+  } catch (error) {
+    console.error("[v0] Error listing truck CSV files:", error instanceof Error ? error.message : error)
+    return {}
+  }
 }
 
 /**
@@ -129,22 +140,33 @@ export async function listTruckCsvByDate(): Promise<CsvByDateMap> {
  * Only checks "csv/navios/" prefix.
  */
 export async function listShipCsvByDate(): Promise<CsvByDateMap> {
-  const { blobs } = await list({
-    prefix: "csv/navios/",
-    token: process.env.BLOB_READ_WRITE_TOKEN,
-  })
+  console.log("[v0] listShipCsvByDate called - token exists:", !!process.env.BLOB_READ_WRITE_TOKEN)
+  
+  try {
+    const { blobs } = await list({
+      prefix: "csv/navios/",
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    })
 
-  const byDate: CsvByDateMap = {}
+    console.log("[v0] Ship blobs found:", blobs.length)
 
-  blobs.forEach((blob) => {
-    const filename = blob.pathname.split("/").pop()
-    if (!filename || !filename.toLowerCase().endsWith("-navios.csv")) return
+    const byDate: CsvByDateMap = {}
 
-    const date = parseCsvDateFromFilename(filename)
-    if (date) {
-      byDate[date] = blob.url
-    }
-  })
+    blobs.forEach((blob) => {
+      const filename = blob.pathname.split("/").pop()
+      if (!filename || !filename.toLowerCase().endsWith("-navios.csv")) return
 
-  return byDate
+      const date = parseCsvDateFromFilename(filename)
+      if (date) {
+        byDate[date] = blob.url
+        console.log(`[v0] Found ship CSV for date ${date}: ${filename}`)
+      }
+    })
+
+    console.log("[v0] Total ship dates found:", Object.keys(byDate).length)
+    return byDate
+  } catch (error) {
+    console.error("[v0] Error listing ship CSV files:", error instanceof Error ? error.message : error)
+    return {}
+  }
 }
