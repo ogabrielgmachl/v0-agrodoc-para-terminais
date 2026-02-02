@@ -1071,8 +1071,8 @@ export function DashboardDesktop({
 
         <main className="relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden">
           {currentModule === "recepcao" ? (
-            <div className="overflow-auto calendar-scroll">
-              <div className="grid grid-cols-7 auto-rows-auto min-h-0">
+            <div className="flex-1 overflow-auto calendar-scroll">
+              <div className="grid h-full grid-cols-7 auto-rows-fr min-h-0">
                   {weekDays.map((day) => (
                     <div
                       key={day}
