@@ -223,7 +223,7 @@ export default function DashboardPage() {
         setIsLoading(true)
         lastLoadTimestamp.current = Date.now()
 
-        let monthPrefix = `${currentYear}-${String(currentMonthIndex + 1).padStart(2, "0")}-`
+        const monthPrefix = `${currentYear}-${String(currentMonthIndex + 1).padStart(2, "0")}-`
 
         const [datesResponse, shipsResponse] = await Promise.all([
           fetch("/api/available-dates", { cache: "no-store" }),
@@ -231,18 +231,7 @@ export default function DashboardPage() {
         ])
 
         const { dates: availableDates } = await datesResponse.json()
-        let monthDates = availableDates.filter((d: string) => d.startsWith(monthPrefix))
-
-        // Se não houver dados para o mês atual, tenta o mês anterior
-        if (monthDates.length === 0 && availableDates.length > 0) {
-          console.log(`[v0] No data for month ${monthPrefix}, using most recent available data`)
-          // Pega a data mais recente disponível
-          const mostRecentDate = availableDates[availableDates.length - 1]
-          const [year, month] = mostRecentDate.split("-")
-          monthPrefix = `${year}-${month}-`
-          monthDates = availableDates.filter((d: string) => d.startsWith(monthPrefix))
-          console.log(`[v0] Using fallback month: ${monthPrefix} with ${monthDates.length} dates`)
-        }
+        const monthDates = availableDates.filter((d: string) => d.startsWith(monthPrefix))
 
         const alreadyLoaded = trucksByDateRef.current
         const datesToLoad = mode === "light" ? monthDates.filter((d: string) => !alreadyLoaded[d]) : monthDates

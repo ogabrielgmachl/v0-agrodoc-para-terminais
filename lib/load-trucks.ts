@@ -256,8 +256,11 @@ export function clearTruckCache() {
 }
 
 async function loadTrucksFromCsv(path: string): Promise<Truck[]> {
-    const cached = csvCache.get(path)
+  const cached = csvCache.get(path)
   if (cached && Date.now() - cached.ts < CSV_CACHE_TTL) {
+    if (process.env.NEXT_PUBLIC_DEBUG_CSV === "true") {
+      console.log(`[v0] Using cached trucks for: ${path}`)
+    }
     return cached.data
   }
 
@@ -268,6 +271,9 @@ async function loadTrucksFromCsv(path: string): Promise<Truck[]> {
     const response = await fetch(urlWithCacheBuster, { cache: "no-store" })
 
     if (!response.ok) {
+      if (process.env.NEXT_PUBLIC_DEBUG_CSV === "true") {
+        console.log(`[v0] Arquivo CSV não encontrado (${response.status}): ${path}`)
+      }
       csvCache.set(path, { data: [], ts: Date.now() })
       return []
     }
@@ -576,6 +582,10 @@ async function getCsvMap(): Promise<Record<string, string>> {
 
     cachedCsvMap = { data: mapData, ts: Date.now() }
 
+    if (process.env.NEXT_PUBLIC_DEBUG_CSV === "true") {
+      console.log("[v0] CSV Map loaded:", Object.keys(mapData).length, "dates available")
+    }
+
     return mapData
   } catch (error) {
     if (error instanceof Error) {
@@ -593,7 +603,14 @@ export async function loadTrucksForDate(date: string): Promise<Truck[] | null> {
     const csvFilePath = csvMap[date]
 
     if (!csvFilePath) {
+      if (process.env.NEXT_PUBLIC_DEBUG_CSV === "true") {
+        console.log(`[v0] No CSV found for date: ${date}`)
+      }
       return null
+    }
+
+    if (process.env.NEXT_PUBLIC_DEBUG_CSV === "true") {
+      console.log(`[v0] Loading trucks from Blob for ${date}: ${csvFilePath}`)
     }
 
     const trucks = await loadTrucksFromCsv(csvFilePath)

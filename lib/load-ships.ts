@@ -144,6 +144,7 @@ export async function loadShipsFromCsv(csvUrl: string, date: string): Promise<Sh
     const response = await fetch(urlWithCacheBuster, { cache: "no-store" })
 
     if (!response.ok) {
+      console.log(`[v0] CSV de navios não encontrado para ${date}`)
       shipCache[date] = { data: [], ts: Date.now() }
       return []
     }
