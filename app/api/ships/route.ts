@@ -17,18 +17,22 @@ export interface Ship {
 }
 
 /**
- * GET /api/ships?year=YYYY&month=MM
+ * GET /api/ships?year=YYYY&month=MM&page=N&limit=L
  * 
  * Retorna navios do Supabase agrupados por data no formato ShipsByDate
  * Query params:
  * - year: Ano (ex: 2026)
  * - month: Mês (ex: 1 para janeiro)
+ * - page: Número da página (opcional, padrão: 1)
+ * - limit: Itens por página (opcional, padrão: 50, max: 100)
  */
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const yearParam = searchParams.get("year")
     const monthParam = searchParams.get("month")
+    const pageParam = searchParams.get("page")
+    const limitParam = searchParams.get("limit")
 
     if (!yearParam || !monthParam) {
       return Response.json(
@@ -39,10 +43,19 @@ export async function GET(request: Request) {
 
     const year = parseInt(yearParam, 10)
     const month = parseInt(monthParam, 10)
+    const page = pageParam ? parseInt(pageParam, 10) : 1
+    const limit = limitParam ? Math.min(parseInt(limitParam, 10), 100) : 50
 
     if (isNaN(year) || isNaN(month) || month < 1 || month > 12) {
       return Response.json(
         { error: "Invalid year or month" },
+        { status: 400 }
+      )
+    }
+
+    if (page < 1 || limit < 1) {
+      return Response.json(
+        { error: "Invalid page or limit" },
         { status: 400 }
       )
     }
@@ -53,15 +66,37 @@ export async function GET(request: Request) {
     const startDate = new Date(year, month - 1, 1).toISOString().split("T")[0]
     const endDate = new Date(year, month, 0).toISOString().split("T")[0]
 
-    console.log(`[v0] Fetching ships for ${year}-${String(month).padStart(2, "0")}: ${startDate} to ${endDate}`)
+    console.log(`[v0] Fetching ships for ${year}-${String(month).padStart(2, "0")}: ${startDate} to ${endDate}, page ${page}, limit ${limit}`)
 
-    // Consulta navios do Supabase para o período
+    // Primeiro, obter o total de registros para cálculo de páginas
+    const { count: totalCount, error: countError } = await supabase
+      .from("navios")
+      .select("*", { count: "exact", head: true })
+      .gte("data_embarque", startDate)
+      .lte("data_embarque", endDate)
+
+    if (countError) {
+      console.error("[v0] Supabase error counting ships:", countError)
+      return Response.json(
+        { error: "Failed to count ships from database" },
+        { status: 500 }
+      )
+    }
+
+    const total = totalCount || 0
+    const totalPages = Math.ceil(total / limit)
+
+    // Consulta navios do Supabase para o período com paginação
+    const from = (page - 1) * limit
+    const to = from + limit - 1
+
     const { data: shipsData, error: shipsError } = await supabase
       .from("navios")
       .select("*")
       .gte("data_embarque", startDate)
       .lte("data_embarque", endDate)
       .order("data_embarque", { ascending: false })
+      .range(from, to)
 
     if (shipsError) {
       console.error("[v0] Supabase error fetching ships:", shipsError)
@@ -144,9 +179,17 @@ export async function GET(request: Request) {
       })
     }
 
-    console.log(`[v0] Ships fetched: ${Object.keys(shipsByDate).length} dates with data`)
+    console.log(`[v0] Ships fetched: ${Object.keys(shipsByDate).length} dates with data, page ${page}/${totalPages}`)
 
-    return Response.json({ shipsByDate }, { status: 200 })
+    return Response.json({ 
+      shipsByDate,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages
+      }
+    }, { status: 200 })
   } catch (error) {
     console.error("[v0] Error in /api/ships:", error)
     return Response.json(
